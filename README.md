@@ -17,7 +17,7 @@ Make sure you have setup the [global development environment](https://gitlab.ost
 ### Step 1: Initialize Okteto
 - Clone the repository:
 ```bash
-$ git clone ssh://git@gitlab.ost.ch:45022/ins/jalapeno-api/sr-app.git
+$ git clone ssh://git@gitlab.ost.ch:45022/ins/jalapeno-api/request-service.git
 ```
 - Initialize okteto:
 ```bash
