@@ -28,7 +28,7 @@ name: request-service
 autocreate: true
 image: okteto/golang:1
 command: bash
-namespace: jagw-dev-michel
+namespace: jagw-dev-<namespace-name>
 securityContext:
   capabilities:
     add:
