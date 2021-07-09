@@ -63,7 +63,7 @@ func (s *requestServiceServer) GetNodes(nodeIds *rsproto.NodeIds, responseStream
 		if err != nil {
 			log.Fatalf("%v.GetNodes(_) = _, %v", client, err)
 		}
-		responseStream.Send(&rsproto.Node{Id: node.Id, Name: node.Name, Asn: node.Asn})
+		responseStream.Send(&rsproto.Node{Key: node.Key, Name: node.Name, Asn: node.Asn})
 	}
 	return nil
 
