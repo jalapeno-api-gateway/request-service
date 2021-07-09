@@ -2,7 +2,7 @@ name: request-service
 autocreate: true
 image: okteto/golang:1
 command: bash
-namespace: jagw-dev-michel
+namespace: jagw-dev-dominique
 securityContext:
   capabilities:
     add:
@@ -19,5 +19,5 @@ forward:
   - 2347:2345
   - 8082:8080
 environment:
-  - GRAPH_DB_FEEDER_ADDRESS=jagw-dev-michel:graph-db-feeder:9001
+  - GRAPH_DB_FEEDER_ADDRESS=jagw-dev-dominique:graph-db-feeder:9001
   
