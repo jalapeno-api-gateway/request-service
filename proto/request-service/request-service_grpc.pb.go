@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ApiGatewayClient interface {
 	GetNode(ctx context.Context, in *NodeIds, opts ...grpc.CallOption) (*Nodes, error)
 	GetNodes(ctx context.Context, in *NodeIds, opts ...grpc.CallOption) (ApiGateway_GetNodesClient, error)
-	GetDataRate(ctx context.Context, in *IPv4Addresses, opts ...grpc.CallOption) (ApiGateway_GetDataRateClient, error)
+	GetDataRates(ctx context.Context, in *IPv4Addresses, opts ...grpc.CallOption) (ApiGateway_GetDataRatesClient, error)
 }
 
 type apiGatewayClient struct {
@@ -72,12 +72,12 @@ func (x *apiGatewayGetNodesClient) Recv() (*Node, error) {
 	return m, nil
 }
 
-func (c *apiGatewayClient) GetDataRate(ctx context.Context, in *IPv4Addresses, opts ...grpc.CallOption) (ApiGateway_GetDataRateClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ApiGateway_ServiceDesc.Streams[1], "/requestservice.ApiGateway/GetDataRate", opts...)
+func (c *apiGatewayClient) GetDataRates(ctx context.Context, in *IPv4Addresses, opts ...grpc.CallOption) (ApiGateway_GetDataRatesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ApiGateway_ServiceDesc.Streams[1], "/requestservice.ApiGateway/GetDataRates", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &apiGatewayGetDataRateClient{stream}
+	x := &apiGatewayGetDataRatesClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -87,16 +87,16 @@ func (c *apiGatewayClient) GetDataRate(ctx context.Context, in *IPv4Addresses, o
 	return x, nil
 }
 
-type ApiGateway_GetDataRateClient interface {
+type ApiGateway_GetDataRatesClient interface {
 	Recv() (*DataRate, error)
 	grpc.ClientStream
 }
 
-type apiGatewayGetDataRateClient struct {
+type apiGatewayGetDataRatesClient struct {
 	grpc.ClientStream
 }
 
-func (x *apiGatewayGetDataRateClient) Recv() (*DataRate, error) {
+func (x *apiGatewayGetDataRatesClient) Recv() (*DataRate, error) {
 	m := new(DataRate)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (x *apiGatewayGetDataRateClient) Recv() (*DataRate, error) {
 type ApiGatewayServer interface {
 	GetNode(context.Context, *NodeIds) (*Nodes, error)
 	GetNodes(*NodeIds, ApiGateway_GetNodesServer) error
-	GetDataRate(*IPv4Addresses, ApiGateway_GetDataRateServer) error
+	GetDataRates(*IPv4Addresses, ApiGateway_GetDataRatesServer) error
 	mustEmbedUnimplementedApiGatewayServer()
 }
 
@@ -124,8 +124,8 @@ func (UnimplementedApiGatewayServer) GetNode(context.Context, *NodeIds) (*Nodes,
 func (UnimplementedApiGatewayServer) GetNodes(*NodeIds, ApiGateway_GetNodesServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetNodes not implemented")
 }
-func (UnimplementedApiGatewayServer) GetDataRate(*IPv4Addresses, ApiGateway_GetDataRateServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetDataRate not implemented")
+func (UnimplementedApiGatewayServer) GetDataRates(*IPv4Addresses, ApiGateway_GetDataRatesServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetDataRates not implemented")
 }
 func (UnimplementedApiGatewayServer) mustEmbedUnimplementedApiGatewayServer() {}
 
@@ -179,24 +179,24 @@ func (x *apiGatewayGetNodesServer) Send(m *Node) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _ApiGateway_GetDataRate_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _ApiGateway_GetDataRates_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(IPv4Addresses)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ApiGatewayServer).GetDataRate(m, &apiGatewayGetDataRateServer{stream})
+	return srv.(ApiGatewayServer).GetDataRates(m, &apiGatewayGetDataRatesServer{stream})
 }
 
-type ApiGateway_GetDataRateServer interface {
+type ApiGateway_GetDataRatesServer interface {
 	Send(*DataRate) error
 	grpc.ServerStream
 }
 
-type apiGatewayGetDataRateServer struct {
+type apiGatewayGetDataRatesServer struct {
 	grpc.ServerStream
 }
 
-func (x *apiGatewayGetDataRateServer) Send(m *DataRate) error {
+func (x *apiGatewayGetDataRatesServer) Send(m *DataRate) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -219,8 +219,8 @@ var ApiGateway_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "GetDataRate",
-			Handler:       _ApiGateway_GetDataRate_Handler,
+			StreamName:    "GetDataRates",
+			Handler:       _ApiGateway_GetDataRates_Handler,
 			ServerStreams: true,
 		},
 	},

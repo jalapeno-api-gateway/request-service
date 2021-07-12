@@ -36,7 +36,7 @@ func main() {
 	}
 }
 
-func (s *requestServiceServer) GetDataRate(ipv4Addresses *rsproto.IPv4Addresses, responseStream rsproto.ApiGateway_GetDataRateServer) error {
+func (s *requestServiceServer) GetDataRates(ipv4Addresses *rsproto.IPv4Addresses, responseStream rsproto.ApiGateway_GetDataRatesServer) error {
 	log.Printf("SR-App requesting DataRates\n")
 
 	//Call GetDataRate on TSDBFeeder

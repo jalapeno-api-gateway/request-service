@@ -30,5 +30,5 @@ message DataRate { //in kbit/s
 service ApiGateway {
     rpc GetNode(NodeIds) returns (Nodes) {}
     rpc GetNodes(NodeIds) returns (stream Node) {}
-    rpc GetDataRate(IPv4Addresses) returns (stream DataRate) {}
+    rpc GetDataRates(IPv4Addresses) returns (stream DataRate) {}
 }
