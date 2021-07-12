@@ -65,6 +65,7 @@ func (s *requestServiceServer) GetDataRates(ipv4Addresses *rsproto.IPv4Addresses
 		}
 		responseStream.Send(&rsproto.DataRate{DataRate: dataRate.DataRate, Ipv4Address: dataRate.Ipv4Address})
 	}
+	log.Printf("All DataRates returned to sr-app")
 	return nil
 }
 
