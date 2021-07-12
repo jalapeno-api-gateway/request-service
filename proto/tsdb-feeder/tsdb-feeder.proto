@@ -1,0 +1,18 @@
+syntax = "proto3";
+package tsdbfeeder;
+
+option go_package = "gitlab.ost.ch/ins/jalapeno-api/tsdb-feeder/proto/tsdb-feeder;tsdbfeeder";
+
+
+message IPv4Addresses {
+    repeated string ipv4address = 1;
+}
+
+message DataRate { //in kbit/s
+    int64 dataRate = 1;
+    string ipv4address = 2;
+}
+
+service TsdbFeeder {
+    rpc GetDataRates(IPv4Addresses) returns (stream DataRate) {}
+}
