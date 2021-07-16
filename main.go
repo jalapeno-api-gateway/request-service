@@ -9,6 +9,7 @@ import (
 
 	graphproto "gitlab.ost.ch/ins/jalapeno-api/request-service/proto/graph-db-feeder"
 	rsproto "gitlab.ost.ch/ins/jalapeno-api/request-service/proto/request-service"
+	tsproto "gitlab.ost.ch/ins/jalapeno-api/request-service/proto/tsdb-feeder"
 	"google.golang.org/grpc"
 )
 
@@ -33,6 +34,39 @@ func main() {
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve gRPC server over port 9000: %v", err)
 	}
+}
+
+func (s *requestServiceServer) GetDataRates(ipv4Addresses *rsproto.IPv4Addresses, responseStream rsproto.ApiGateway_GetDataRatesServer) error {
+	log.Printf("SR-App requesting DataRates\n")
+
+	//Call GetDataRate on TSDBFeeder
+	var conn *grpc.ClientConn
+	conn, err := grpc.Dial(os.Getenv("TSDB_FEEDER_ADDRESS"), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Could not connect: %s", err)
+	}
+	defer conn.Close()
+
+	client := tsproto.NewTsdbFeederClient(conn)
+	message := &tsproto.IPv4Addresses{Ipv4Address: ipv4Addresses.Ipv4Address}
+	stream, err := client.GetDataRates(context.Background(), message)
+
+	if err != nil {
+		log.Fatalf("Error when calling GetDataRate on TSDBFeeder: %s", err)
+	}
+
+	for {
+		dataRate, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.GetNodes(_) = _, %v", client, err)
+		}
+		responseStream.Send(&rsproto.DataRate{DataRate: dataRate.DataRate, Ipv4Address: dataRate.Ipv4Address})
+	}
+	log.Printf("All DataRates returned to sr-app")
+	return nil
 }
 
 func (s *requestServiceServer) GetNodes(nodeIds *rsproto.NodeIds, responseStream rsproto.ApiGateway_GetNodesServer) error {
@@ -66,5 +100,4 @@ func (s *requestServiceServer) GetNodes(nodeIds *rsproto.NodeIds, responseStream
 		responseStream.Send(&rsproto.Node{Key: node.Key, Name: node.Name, Asn: node.Asn})
 	}
 	return nil
-
 }
