@@ -99,5 +99,6 @@ func (s *requestServiceServer) GetNodes(nodeIds *rsproto.NodeIds, responseStream
 		}
 		responseStream.Send(&rsproto.Node{Key: node.Key, Name: node.Name, Asn: node.Asn})
 	}
+	log.Printf("Sent back all Nodes to SR-App\n")
 	return nil
 }
