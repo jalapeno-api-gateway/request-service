@@ -47,6 +47,8 @@ forward:
   - 8082:8080
 environment:
   - GRAPH_DB_FEEDER_ADDRESS=graph-db-feeder:9001
+  - TSDB_FEEDER_ADDRESS=tsdb-service:9000
+
 ```
 
 ### Step 2: Initialize the Container
