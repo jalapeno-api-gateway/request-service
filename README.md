@@ -85,7 +85,7 @@ $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
 
 # Documentation
 ## Deployment Diagram
-<img src="https://gitlab.ost.ch/ins/jalapeno-api/request-service/-/raw/master/assets/api-gateway-deployment.png" alt="deployment-diagram"/>
+<img src="https://gitlab.ost.ch/ins/jalapeno-api/request-service/-/raw/master/assets/api-gateway-deployment.png" alt="deployment-diagram" width="800"/>
 
 ## Basic Principle
 ### For the Topology Data
