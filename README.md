@@ -46,7 +46,7 @@ forward:
   - 2347:2345
   - 8082:8080
 environment:
-  - GRAPH_DB_FEEDER_ADDRESS=graph-db-feeder:9001
+  - GRAPH_DB_FEEDER_ADDRESS=graph-db-feeder:9000
   - TSDB_FEEDER_ADDRESS=tsdb-service:9000
 
 ```
