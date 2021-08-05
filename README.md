@@ -80,39 +80,3 @@ Just run these commands:
 $ go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
 $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
 ```
-
-
-
-# Documentation
-## Deployment Diagram
-<img src="https://gitlab.ost.ch/ins/jalapeno-api/request-service/-/raw/master/assets/api-gateway-deployment.png" alt="deployment-diagram" width="800"/>
-
-## Basic Principle
-### For the Topology Data
-- The data processor 'Topology' updates the GraphDB when required and upon completion sends an '_event' message to Kafka containing the '_key' of the updated database entry.
-- During bootup, the GraphDB Feeder first fetches the current state of all collections in the GraphDB and stores everything in the cache.
-- Afterwards, the GraphDB Feeder turns to Kafka and watches all '_event' topics. Whenever a database entry has been updated, the GraphDB Feeder reads the updated entry from the GraphDB (using the '_key') and compares it to what it has stored in the cache. It then sends and update to the Push Service containing only the updated properties and the '_key'. Finally, the GraphDB Feeder updates the cache.
-
-This guarantees that the cache is always up to date and that the Push Service gets informed on all updates.
-
-### For the Time Series Data
-- Because there is a huge amount of Time Series Data and because it is constantly chaning, it will not be cached.
-- To get the current state of a TSDB entry, the Request Service or the Push Service call the TSDB Feeder, which queries the database for them.
-- The TSDB Feeder constantly watches the Kafka topic 'jalapeno.telemetry' and informs the Push Service on all updates.
-
-### For the Request Service
-- If the request service receives a request for topology data, it reads it directly from the cache.
-- If the request service receives a request for telemetry data, it asks the TSDB Feeder to get it.
-
-### For the Push Service
-- When an SR-App subscribes to some data, the Push Service first opens a channels to catch all incoming updates (either from the GraphDB Feeder or the TSDB Feeder).
-- Then it queries the Request Service for the current state of these entries and returns them to the SR-App.
-- Finally, it starts processing the updates in the channel, sending them all back to the SR-App. Some of the first updates may be redundant, but it is guaranteed that no update has been lost to the SR-App.
-
-
-## Startup Behavior
-This is the behavior of the API Gateway when it is started for the first time:
-1. The GraphDB Feeder starts queueing all updates from the '_events' topics in Kafka concerning the topology data in a channel.
-2. It then gets the current state of all entries from  the GraphDB and stores them in the cache.
-3. It now starts processing the updates in the channel. Some of the first updates may be redundant, but it is guaranteed that no update has been lost.
-
