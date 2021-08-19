@@ -18,7 +18,6 @@ func scanAllKeysOfCollection(ctx context.Context, collectionName CollectionName)
 	iter := redisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", collectionName), 0).Iterator()
 	keys := []string{}
 	for iter.Next(ctx) {
-		log.Print(iter.Val())
 		keys = append(keys, iter.Val())
 	}
 	return keys
