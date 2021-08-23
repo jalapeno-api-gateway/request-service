@@ -25,7 +25,7 @@ name: request-service
 autocreate: true
 image: okteto/golang:1
 command: bash
-namespace: jagw-dev-<namespace-name>
+namespace: <namespace-name>
 securityContext:
   capabilities:
     add:
@@ -48,6 +48,6 @@ environment:
   - INFLUX_PASSWORD=jalapeno
   - INFLUX_DB=mdt_db
   - REDIS_PASSWORD=a-very-complex-password-here
-  - SENTINEL_ADDRESS=sentinel.jagw-dev-michel.svc.cluster.local:5000
+  - SENTINEL_ADDRESS=sentinel.<namespace-name>.svc.cluster.local:5000
   - SENTINEL_MASTER=mymaster
 ```
