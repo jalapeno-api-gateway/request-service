@@ -42,7 +42,7 @@ func (s *requestServiceServer) GetLsNodes(request *LsNodeRequest, responseStream
 func (s *requestServiceServer) GetLsLinks(request *LsLinkRequest, responseStream ApiGateway_GetLsLinksServer) error {
 	log.Printf("SR-App requesting Links\n")
 	ctx := context.Background()
-	
+
 	documents := []redis.LsLinkDocument{}
 	if len(request.Keys) == 0 {
 		documents = redis.FetchAllLsLinks(ctx)
@@ -64,9 +64,8 @@ func (s *requestServiceServer) GetLsLinks(request *LsLinkRequest, responseStream
 func (s *requestServiceServer) GetDataRates(request *DataRateRequest, responseStream ApiGateway_GetDataRatesServer) error {
 	log.Printf("SR-App requesting DataRates\n")
 
-	influxClient := influxdb.ConnectToInfluxDb()
-	dataRates := influxdb.FetchDataRates(influxClient, request.Ipv4Addresses)
-	
+	dataRates := influxdb.FetchDataRates(influxdb.InfluxClient, request.Ipv4Addresses)
+
 	for _, dataRate := range dataRates {
 		response := convertToGrpcDataRate(dataRate)
 		if err := responseStream.Send(&response); err != nil {

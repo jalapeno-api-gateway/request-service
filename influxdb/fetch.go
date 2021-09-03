@@ -8,12 +8,18 @@ import (
 	influx "github.com/influxdata/influxdb1-client/v2"
 )
 
-func FetchDataRates(client influx.Client, ipv4addresses []string) []DataRate {
+func FetchDataRates(client *influx.Client, ipv4addresses []string) []DataRate {
 	var dataRates []DataRate
 
 	for _, ip := range ipv4addresses {
+		//TODO: Check for Query Injection??
 		queryString := fmt.Sprintf("select last(\"data_rates/output_data_rate\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s'", ip)
-		response := queryInflux(client, queryString)
+		response := queryInflux(*client, queryString)
+
+		if len(response.Results[0].Series) == 0 {
+			//no result for this ip; proceed with the next one
+			continue
+		}
 
 		rawDataRate, err := response.Results[0].Series[0].Values[0][1].(json.Number).Int64()
 		if err != nil {

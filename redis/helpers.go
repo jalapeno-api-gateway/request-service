@@ -15,7 +15,7 @@ func prependCollectionNameToKeys(keys []string, collectionName CollectionName) [
 }
 
 func scanAllKeysOfCollection(ctx context.Context, collectionName CollectionName) []string {
-	iter := redisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", collectionName), 0).Iterator()
+	iter := RedisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", collectionName), 0).Iterator()
 	keys := []string{}
 	for iter.Next(ctx) {
 		keys = append(keys, iter.Val())
@@ -24,13 +24,17 @@ func scanAllKeysOfCollection(ctx context.Context, collectionName CollectionName)
 }
 
 func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
-	values, err := redisClient.MGet(ctx, keys...).Result()
+	//MGet returns nil for a key which is not present in cache
+	values, err := RedisClient.MGet(ctx, keys...).Result()
 	if err != nil {
 		log.Fatal("Error fetching documents from Redis: ", err)
 	}
 
 	bytes := [][]byte{}
 	for _, value := range values {
+		if value == nil { //entry was not in cache
+			continue
+		}
 		bytes = append(bytes, []byte(value.(string)))
 	}
 
