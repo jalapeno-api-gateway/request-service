@@ -32,10 +32,9 @@ func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
 
 	bytes := [][]byte{}
 	for _, value := range values {
-		if value == nil { //entry was not in cache
-			continue
+		if value != nil { //entry found in cache
+			bytes = append(bytes, []byte(value.(string)))
 		}
-		bytes = append(bytes, []byte(value.(string)))
 	}
 
 	return bytes
