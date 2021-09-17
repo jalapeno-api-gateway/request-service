@@ -4,12 +4,11 @@ import (
 	context "context"
 	"log"
 
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/influxdb"
 	"gitlab.ost.ch/ins/jalapeno-api/request-service/redis"
 )
 
 type requestServiceServer struct {
-	UnimplementedApiGatewayServer
+	UnimplementedRequestServiceServer
 }
 
 func NewServer() *requestServiceServer {
@@ -17,7 +16,7 @@ func NewServer() *requestServiceServer {
 	return s
 }
 
-func (s *requestServiceServer) GetLsNodes(request *LsNodeRequest, responseStream ApiGateway_GetLsNodesServer) error {
+func (s *requestServiceServer) GetLsNodes(request *TopologyRequest, responseStream RequestService_GetLsNodesServer) error {
 	log.Printf("SR-App requesting Nodes\n")
 	ctx := context.Background()
 
@@ -29,8 +28,8 @@ func (s *requestServiceServer) GetLsNodes(request *LsNodeRequest, responseStream
 	}
 
 	for _, document := range documents {
-		lsNode := convertToGrpcLsNode(document)
-		err := responseStream.Send(&lsNode)
+		lsNode := convertLsNode(document, request.PropertyNames)
+		err := responseStream.Send(lsNode)
 		if err != nil {
 			log.Fatal("Unable to send LsNode: ", err)
 		}
@@ -39,7 +38,7 @@ func (s *requestServiceServer) GetLsNodes(request *LsNodeRequest, responseStream
 	return nil
 }
 
-func (s *requestServiceServer) GetLsLinks(request *LsLinkRequest, responseStream ApiGateway_GetLsLinksServer) error {
+func (s *requestServiceServer) GetLsLinks(request *TopologyRequest, responseStream RequestService_GetLsLinksServer) error {
 	log.Printf("SR-App requesting Links\n")
 	ctx := context.Background()
 
@@ -51,8 +50,8 @@ func (s *requestServiceServer) GetLsLinks(request *LsLinkRequest, responseStream
 	}
 
 	for _, document := range documents {
-		lsNode := convertToGrpcLsLink(document)
-		err := responseStream.Send(&lsNode)
+		lsNode := convertLsLink(document, request.PropertyNames)
+		err := responseStream.Send(lsNode)
 		if err != nil {
 			log.Fatal("Unable to send LsLink: ", err)
 		}
@@ -61,15 +60,13 @@ func (s *requestServiceServer) GetLsLinks(request *LsLinkRequest, responseStream
 	return nil
 }
 
-func (s *requestServiceServer) GetDataRates(request *DataRateRequest, responseStream ApiGateway_GetDataRatesServer) error {
+func (s *requestServiceServer) GetTelemetryData(request *TelemetryRequest, responseStream RequestService_GetTelemetryDataServer) error {
 	log.Printf("SR-App requesting DataRates\n")
 
-	dataRates := influxdb.FetchDataRates(influxdb.InfluxClient, request.Ipv4Addresses)
-
-	for _, dataRate := range dataRates {
-		response := convertToGrpcDataRate(dataRate)
-		if err := responseStream.Send(&response); err != nil {
-			log.Fatalf("Could not return dataRate to request-service, %v", err)
+	for _, ipv4address := range request.Ipv4Addresses {
+		response := fetchTelemetryResponse(ipv4address, request.PropertyNames)
+		if err := responseStream.Send(response); err != nil {
+			log.Fatalf("Could not return TelemetryData to SR-App, %v", err)
 		}
 	}
 	return nil

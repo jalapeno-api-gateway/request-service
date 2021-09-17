@@ -22,9 +22,9 @@ func InitializeInfluxClient() {
 	InfluxClient = &client
 }
 
-func queryInflux(client influx.Client, queryString string) *influx.Response {
+func queryInflux(queryString string) *influx.Response {
 	query := influx.NewQuery(queryString, os.Getenv("INFLUX_DB"), "")
-	response, err := client.Query(query)
+	response, err := (*InfluxClient).Query(query)
 
 	if err != nil {
 		log.Fatalf("Error querying InfluxDb: %v", err)

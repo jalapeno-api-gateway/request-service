@@ -31,7 +31,7 @@ func main() {
 		grpcServer.Stop()
 	}()
 
-	requestservice.RegisterApiGatewayServer(grpcServer, requestservice.NewServer())
+	requestservice.RegisterRequestServiceServer(grpcServer, requestservice.NewServer())
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve gRPC server: %v", err)
 	}
