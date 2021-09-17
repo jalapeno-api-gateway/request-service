@@ -7,11 +7,6 @@ const (
 	LsLinkCollection CollectionName = "LSLink"
 )
 
-type KeyVal struct {
-	Key string
-	Val []byte
-}
-
 type LsNodeDocument struct {
 	Id			string `json:"_id,omitempty"`
 	Key			string `json:"_key,omitempty"`

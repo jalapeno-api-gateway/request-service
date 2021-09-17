@@ -1,28 +1,30 @@
 package influxdb
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	influx "github.com/influxdata/influxdb1-client/v2"
 )
 
-func ConnectToInfluxDb() influx.Client {
+var InfluxClient *influx.Client
+
+func InitializeInfluxClient() {
 	client, err := influx.NewHTTPClient(influx.HTTPConfig{
 		Addr:     os.Getenv("INFLUX_DB_URL"),
 		Username: os.Getenv("INFLUX_USER"),
 		Password: os.Getenv("INFLUX_PASSWORD"),
 	})
 	if err != nil {
-		fmt.Println("Error creating InfluxDB Client: ", err.Error())
+		//TODO: Inform SR-App about unavailable
+		log.Fatal("Error creating InfluxDB Client: ", err.Error())
 	}
-	return client
+	InfluxClient = &client
 }
 
-func queryInflux(client influx.Client, queryString string) *influx.Response {
+func queryInflux(queryString string) *influx.Response {
 	query := influx.NewQuery(queryString, os.Getenv("INFLUX_DB"), "")
-	response, err := client.Query(query)
+	response, err := (*InfluxClient).Query(query)
 
 	if err != nil {
 		log.Fatalf("Error querying InfluxDb: %v", err)
