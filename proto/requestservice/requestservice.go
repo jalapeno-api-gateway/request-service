@@ -16,58 +16,55 @@ func NewServer() *requestServiceServer {
 	return s
 }
 
-func (s *requestServiceServer) GetLsNodes(request *TopologyRequest, responseStream RequestService_GetLsNodesServer) error {
+func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *TopologyRequest) (*LsNodeResponse, error) {
 	log.Printf("SR-App requesting Nodes\n")
-	ctx := context.Background()
 
-	documents := []redis.LsNodeDocument{}
+	var documents []redis.LsNodeDocument
 	if len(request.Keys) == 0 {
 		documents = redis.FetchAllLsNodes(ctx)
 	} else {
 		documents = redis.FetchLsNodes(ctx, request.Keys)
 	}
 
+	response := &LsNodeResponse{}
+
 	for _, document := range documents {
 		lsNode := convertLsNode(document, request.PropertyNames)
-		err := responseStream.Send(lsNode)
-		if err != nil {
-			log.Fatal("Unable to send LsNode: ", err)
-		}
+		response.LsNodes = append(response.LsNodes, lsNode)
 	}
-
-	return nil
+	
+	return response, nil
 }
 
-func (s *requestServiceServer) GetLsLinks(request *TopologyRequest, responseStream RequestService_GetLsLinksServer) error {
+func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *TopologyRequest) (*LsLinkResponse, error) {
 	log.Printf("SR-App requesting Links\n")
-	ctx := context.Background()
 
-	documents := []redis.LsLinkDocument{}
+	var documents []redis.LsLinkDocument
 	if len(request.Keys) == 0 {
 		documents = redis.FetchAllLsLinks(ctx)
 	} else {
 		documents = redis.FetchLsLinks(ctx, request.Keys)
 	}
 
-	for _, document := range documents {
-		lsNode := convertLsLink(document, request.PropertyNames)
-		err := responseStream.Send(lsNode)
-		if err != nil {
-			log.Fatal("Unable to send LsLink: ", err)
-		}
-	}
+	response := &LsLinkResponse{}
 
-	return nil
+	for _, document := range documents {
+		lsLink := convertLsLink(document, request.PropertyNames)
+		response.LsLinks = append(response.LsLinks, lsLink)
+	}
+	
+	return response, nil
 }
 
-func (s *requestServiceServer) GetTelemetryData(request *TelemetryRequest, responseStream RequestService_GetTelemetryDataServer) error {
+func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *TelemetryRequest) (*TelemetryResponse, error) {
 	log.Printf("SR-App requesting DataRates\n")
 
+	response := &TelemetryResponse{}
+
 	for _, ipv4address := range request.Ipv4Addresses {
-		response := fetchTelemetryResponse(ipv4address, request.PropertyNames)
-		if err := responseStream.Send(response); err != nil {
-			log.Fatalf("Could not return TelemetryData to SR-App, %v", err)
-		}
+		telemetryData := fetchTelemetryData(ipv4address, request.PropertyNames)
+		response.TelemetryData = append(response.TelemetryData, telemetryData)
 	}
-	return nil
+
+	return response, nil
 }
