@@ -27,6 +27,10 @@ message TelemetryRequest {
 // Responses
 //
 
+message LsNodeResponse {
+    repeated LsNode ls_nodes = 1;
+}
+
 message LsNode {
     string key = 1;
     string name = 2;
