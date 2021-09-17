@@ -70,26 +70,22 @@ func convertLsLink(document redis.LsLinkDocument, propertyNames []string) *LsLin
 	return &lsLink
 }
 
-func (lsLink *LsLink) setLsLinkProperty(document redis.LsLinkDocument, property string) {
-	
-}
-
-func fetchTelemetryResponse(ipv4address string, propertyNames []string) *TelemetryResponse {
-	response := &TelemetryResponse{Ipv4Address: ipv4address}
+func fetchTelemetryData(ipv4address string, propertyNames []string) *TelemetryData {
+	response := &TelemetryData{Ipv4Address: ipv4address}
 	for _, property := range propertyNames {
 		response.setProperty(ipv4address, property)
 	}
 	return response
 }
 
-func (response *TelemetryResponse) setProperty(ipv4address string, property string) {
+func (response *TelemetryData) setProperty(ipv4address string, property string) {
 	switch property {
 	case DataRate:
 		response.setDataRate(ipv4address)
 	}
 }
 
-func (response *TelemetryResponse) setDataRate(ipv4address string) {
+func (response *TelemetryData) setDataRate(ipv4address string) {
 	dataRate, err := influxdb.FetchDataRate(ipv4address)
 	if err == nil {
 		response.DataRate = dataRate
