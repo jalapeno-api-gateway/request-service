@@ -3,6 +3,7 @@ package requestservice
 import (
 	"gitlab.ost.ch/ins/jalapeno-api/request-service/influxdb"
 	"gitlab.ost.ch/ins/jalapeno-api/request-service/redis"
+	"google.golang.org/protobuf/proto"
 )
 
 // Property Names
@@ -40,9 +41,9 @@ func convertLsNode(document redis.LsNodeDocument, propertyNames []string) *LsNod
 
 	for _, property := range propertyNames {
 		switch property {
-			case Name: lsNode.Name = document.Name
-			case Asn: lsNode.Asn = document.Asn
-			case RouterIp: lsNode.RouterIp = document.Router_ip
+			case Name: lsNode.Name = proto.String(document.Name)
+			case Asn: lsNode.Asn = proto.Int32(document.Asn)
+			case RouterIp: lsNode.RouterIp = proto.String(document.Router_ip)
 		}
 	}
 	
@@ -59,11 +60,11 @@ func convertLsLink(document redis.LsLinkDocument, propertyNames []string) *LsLin
 
 	for _, property := range propertyNames {
 		switch property {
-			case RouterIp: lsLink.RouterIp = document.Router_ip
-			case PeerIp: lsLink.PeerIp = document.Peer_ip
-			case LocalLinkIp: lsLink.LocalLinkIp = document.LocalLink_ip
-			case RemoteLinkIp: lsLink.RemoteLinkIp = document.RemoteLink_ip
-			case IgpMetric: lsLink.IgpMetric = int32(document.Igp_metric)
+			case RouterIp: lsLink.RouterIp = proto.String(document.Router_ip)
+			case PeerIp: lsLink.PeerIp = proto.String(document.Peer_ip)
+			case LocalLinkIp: lsLink.LocalLinkIp = proto.String(document.LocalLink_ip)
+			case RemoteLinkIp: lsLink.RemoteLinkIp = proto.String(document.RemoteLink_ip)
+			case IgpMetric: lsLink.IgpMetric = proto.Int32(int32(document.Igp_metric))
 		}
 	}
 
@@ -88,6 +89,6 @@ func (response *TelemetryData) setProperty(ipv4address string, property string) 
 func (response *TelemetryData) setDataRate(ipv4address string) {
 	dataRate, err := influxdb.FetchDataRate(ipv4address)
 	if err == nil {
-		response.DataRate = dataRate
+		response.DataRate = proto.Int64(dataRate)
 	}
 }
