@@ -4,7 +4,7 @@ import (
 	context "context"
 	"log"
 
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/redis"
+	"github.com/jalapeno-api-gateway/request-service/redis"
 )
 
 type requestServiceServer struct {

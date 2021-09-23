@@ -8,7 +8,7 @@ $ protoc --proto_path=./proto/requestservice --go_out=./proto/requestservice --g
 ```
 
 ## Setting Up Development Environment
-Make sure you have setup the [global development environment](https://gitlab.ost.ch/ins/jalapeno-api/request-service/-/wikis/Development-Environment) first.
+Make sure you have setup the [global development environment](https://github.com/jalapeno-api-gateway/request-service/-/wikis/Development-Environment) first.
 
 ## Initialize Okteto
 - Clone the repository:

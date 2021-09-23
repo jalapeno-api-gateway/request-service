@@ -5,10 +5,10 @@ import (
 	"net"
 	"os"
 
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/helpers"
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/influxdb"
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/proto/requestservice"
-	"gitlab.ost.ch/ins/jalapeno-api/request-service/redis"
+	"github.com/jalapeno-api-gateway/request-service/helpers"
+	"github.com/jalapeno-api-gateway/request-service/influxdb"
+	"github.com/jalapeno-api-gateway/request-service/proto/requestservice"
+	"github.com/jalapeno-api-gateway/request-service/redis"
 	"google.golang.org/grpc"
 )
 

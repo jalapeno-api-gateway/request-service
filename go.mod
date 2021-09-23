@@ -1,4 +1,4 @@
-module gitlab.ost.ch/ins/jalapeno-api/request-service
+module github.com/jalapeno-api-gateway/request-service
 
 go 1.16
 
