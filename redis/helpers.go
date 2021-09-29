@@ -5,17 +5,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/jalapeno-api-gateway/model/class"
+	"github.com/jalapeno-api-gateway/model/topology"
 )
 
-func prependCollectionNameToKeys(keys []string, collectionName CollectionName) []string {
+func prependCollectionNameToKeys(keys []string, className class.Class) []string {
 	for i, key := range keys {
-		keys[i] = fmt.Sprintf("%s/%s", collectionName, key)
+		keys[i] = fmt.Sprintf("%s/%s", className, key)
 	}
 	return keys
 }
 
-func scanAllKeysOfCollection(ctx context.Context, collectionName CollectionName) []string {
-	iter := RedisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", collectionName), 0).Iterator()
+func scanAllKeysOfCollection(ctx context.Context, className class.Class) []string {
+	iter := RedisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", className), 0).Iterator()
 	keys := []string{}
 	for iter.Next(ctx) {
 		keys = append(keys, iter.Val())
@@ -40,24 +43,30 @@ func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
 	return bytes
 }
 
-//
-// ---> Unmarshalling <---
-//
-
-func unmarshalLsNodeDocument(bytes []byte) LsNodeDocument {
-	document := LsNodeDocument{}
-	err := json.Unmarshal(bytes, &document)
-	if err != nil {
-		log.Fatal("Error unmarshalling LsNode: ", err)
+func unmarshalObject(bytes []byte, className class.Class) interface{} {
+	switch className {
+		case class.LSNode:
+			document := topology.LSNode{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
+		case class.LSLink:
+			document := topology.LSLink{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
+		case class.LSPrefix:
+			document := topology.LSPrefix{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
+		case class.LSSRv6SID:
+			document := topology.LSSRv6SID{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
+		default: return nil
 	}
-	return document
 }
 
-func unmarshalLsLinkDocument(bytes []byte) LsLinkDocument {
-	document := LsLinkDocument{}
-	err := json.Unmarshal(bytes, &document)
+func handleUnmarshallingError(err error) {
 	if err != nil {
-		log.Fatal("Error unmarshalling LsLink: ", err)
+		log.Fatal("Error while unmarshalling object: ", err)
 	}
-	return document
 }

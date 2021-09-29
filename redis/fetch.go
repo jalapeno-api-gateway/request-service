@@ -2,52 +2,26 @@ package redis
 
 import (
 	"context"
+
+	"github.com/jalapeno-api-gateway/model/class"
 )
 
-//
-// ---> FETCH SPECIFIC <---
-//
-
-func FetchLsNodes(ctx context.Context, keys []string) []LsNodeDocument {
-	keys = prependCollectionNameToKeys(keys, LsNodeCollection)
-	documents := []LsNodeDocument{}
+func Fetch(ctx context.Context, keys []string, className class.Class) []interface{} {
+	keys = prependCollectionNameToKeys(keys, className)
+	var documents []interface{}
 	values := getValuesByKeys(ctx, keys)
 	for _, value := range values {
-		documents = append(documents, unmarshalLsNodeDocument(value))
+		documents = append(documents, unmarshalObject(value, className))
 	}
 	return documents
 }
 
-func FetchLsLinks(ctx context.Context, keys []string) []LsLinkDocument {
-	keys = prependCollectionNameToKeys(keys, LsLinkCollection)
-	documents := []LsLinkDocument{}
+func FetchAll(ctx context.Context, className class.Class) []interface{} {
+	var documents []interface{}
+	keys := scanAllKeysOfCollection(ctx, className)
 	values := getValuesByKeys(ctx, keys)
 	for _, value := range values {
-		documents = append(documents, unmarshalLsLinkDocument(value))
-	}
-	return documents
-}
-
-//
-// ---> FETCH ALL <---
-//
-
-func FetchAllLsNodes(ctx context.Context) []LsNodeDocument {
-	documents := []LsNodeDocument{}
-	keys := scanAllKeysOfCollection(ctx, LsNodeCollection)
-	values := getValuesByKeys(ctx, keys)
-	for _, value := range values {
-		documents = append(documents, unmarshalLsNodeDocument(value))
-	}
-	return documents
-}
-
-func FetchAllLsLinks(ctx context.Context) []LsLinkDocument {
-	documents := []LsLinkDocument{}
-	keys := scanAllKeysOfCollection(ctx, LsLinkCollection)
-	values := getValuesByKeys(ctx, keys)
-	for _, value := range values {
-		documents = append(documents, unmarshalLsLinkDocument(value))
+		documents = append(documents, unmarshalObject(value, className))
 	}
 	return documents
 }
