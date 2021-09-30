@@ -8,7 +8,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN go build -o ./out/request-service .
+RUN CGO_ENABLED=0 go build -o ./out/request-service .
 
 FROM scratch
 LABEL maintainer="Julian Klaiber"
