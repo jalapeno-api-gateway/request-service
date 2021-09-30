@@ -10,11 +10,9 @@ import (
 
 var InfluxClient *influx.Client
 
-const INFLUX_DB_PORT = 30308
-
 func InitializeInfluxClient() {
 	client, err := influx.NewHTTPClient(influx.HTTPConfig{
-		Addr:     fmt.Sprintf("http://%s:%d", os.Getenv("JALAPENO_SERVER"), INFLUX_DB_PORT),
+		Addr:     fmt.Sprintf("http://%s", os.Getenv("INFLUX_ADDRESS")),
 		Username: os.Getenv("INFLUX_USER"),
 		Password: os.Getenv("INFLUX_PASSWORD"),
 	})
