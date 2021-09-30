@@ -3,7 +3,7 @@ package requestservice
 import (
 	"context"
 
-	"github.com/jalapeno-api-gateway/model/class"
+	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 	"github.com/jalapeno-api-gateway/request-service/redis"
 )
 

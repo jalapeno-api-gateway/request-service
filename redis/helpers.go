@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jalapeno-api-gateway/model/class"
-	"github.com/jalapeno-api-gateway/model/topology"
+	"github.com/jalapeno-api-gateway/jagw-core/model/class"
+	"github.com/jalapeno-api-gateway/jagw-core/model/topology"
 )
 
 func prependCollectionNameToKeys(keys []string, className class.Class) []string {

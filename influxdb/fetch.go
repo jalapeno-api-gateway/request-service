@@ -17,17 +17,52 @@ const (
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
 
-func FetchDataRate(ipv4address string) (int64, error) {
+func FetchOutputDataRate(ipv4address string) (int64, error) {
 	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", DataRateIdentifier, ipv4address)
+	return fetchInt64Value(queryString)
+}
+
+func FetchPacketsSent(ipv4address string) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", PacketsSentIdentifier, ipv4address)
+	return fetchInt64Value(queryString)
+}
+
+func FetchPacketsReceived(ipv4address string) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", PacketsReceivedIdentifier, ipv4address)
+	return fetchInt64Value(queryString)
+}
+
+func FetchState(ipv4address string) (string, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", StateIdentifier, ipv4address)
+	return fetchStringValue(queryString)
+}
+
+func FetchLastStateTransitionTime(ipv4address string) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", LastStateTransitionTimeIdentifier, ipv4address)
+	return fetchInt64Value(queryString)
+}
+
+func fetchStringValue(queryString string) (string, error) {
+	response := queryInflux(queryString)
+	
+	if len(response.Results[0].Series) == 0 {
+		return "", errors.New("no int64 value found for this ipv4address")
+	}
+
+	value := response.Results[0].Series[0].Values[0][1].(string)
+	return value, nil
+}
+
+func fetchInt64Value(queryString string) (int64, error) {
 	response := queryInflux(queryString)
 
 	if len(response.Results[0].Series) == 0 {
-		return 0, errors.New("no data rate found for this ipv4address")
+		return 0, errors.New("no int64 value found for this ipv4address")
 	}
 
-	rawDataRate, err := response.Results[0].Series[0].Values[0][1].(json.Number).Int64()
+	value, err := response.Results[0].Series[0].Values[0][1].(json.Number).Int64()
 	if err != nil {
-		log.Fatalf("Could not convert data rate to Int64")
+		log.Fatalf("Could not convert packets received to Int64")
 	}
-	return rawDataRate, nil
+	return value, nil
 }

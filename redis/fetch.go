@@ -3,7 +3,7 @@ package redis
 import (
 	"context"
 
-	"github.com/jalapeno-api-gateway/model/class"
+	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 )
 
 func Fetch(ctx context.Context, keys []string, className class.Class) []interface{} {

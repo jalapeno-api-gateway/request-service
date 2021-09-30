@@ -1,8 +1,8 @@
 package requestservice
 
 import (
-	"github.com/jalapeno-api-gateway/model/property"
-	"github.com/jalapeno-api-gateway/model/topology"
+	"github.com/jalapeno-api-gateway/jagw-core/model/property"
+	"github.com/jalapeno-api-gateway/jagw-core/model/topology"
 	"google.golang.org/protobuf/proto"
 )
 

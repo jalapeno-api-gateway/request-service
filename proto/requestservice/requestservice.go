@@ -4,7 +4,7 @@ import (
 	context "context"
 	"log"
 
-	"github.com/jalapeno-api-gateway/model/class"
+	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 )
 
 type requestServiceServer struct {
