@@ -61,7 +61,7 @@ func (s *requestServiceServer) GetLSPrefixes(ctx context.Context, request *Topol
 	return response, nil
 }
 
-func (s *requestServiceServer) GetLSSRv6SID(ctx context.Context, request *TopologyRequest) (*LSSRv6SIDResponse, error) {
+func (s *requestServiceServer) GetLSSRv6SIDs(ctx context.Context, request *TopologyRequest) (*LSSRv6SIDResponse, error) {
 	log.Printf("SR-App requesting LSSRv6SID\n")
 
 	documents := fetchDocuments(ctx, request.Keys, class.LSSRv6SID)

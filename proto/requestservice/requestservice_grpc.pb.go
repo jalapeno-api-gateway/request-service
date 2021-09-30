@@ -20,8 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type RequestServiceClient interface {
 	GetLSNodes(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSNodeResponse, error)
 	GetLSLinks(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSLinkResponse, error)
-	GetLSPrefix(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSPrefixResponse, error)
-	GetLSSRv6SID(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSSRv6SIDResponse, error)
+	GetLSPrefixes(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSPrefixResponse, error)
+	GetLSSRv6SIDs(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSSRv6SIDResponse, error)
 	GetTelemetryData(ctx context.Context, in *TelemetryRequest, opts ...grpc.CallOption) (*TelemetryResponse, error)
 }
 
@@ -51,18 +51,18 @@ func (c *requestServiceClient) GetLSLinks(ctx context.Context, in *TopologyReque
 	return out, nil
 }
 
-func (c *requestServiceClient) GetLSPrefix(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSPrefixResponse, error) {
+func (c *requestServiceClient) GetLSPrefixes(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSPrefixResponse, error) {
 	out := new(LSPrefixResponse)
-	err := c.cc.Invoke(ctx, "/requestservice.RequestService/GetLSPrefix", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/requestservice.RequestService/GetLSPrefixes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *requestServiceClient) GetLSSRv6SID(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSSRv6SIDResponse, error) {
+func (c *requestServiceClient) GetLSSRv6SIDs(ctx context.Context, in *TopologyRequest, opts ...grpc.CallOption) (*LSSRv6SIDResponse, error) {
 	out := new(LSSRv6SIDResponse)
-	err := c.cc.Invoke(ctx, "/requestservice.RequestService/GetLSSRv6SID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/requestservice.RequestService/GetLSSRv6SIDs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,8 +84,8 @@ func (c *requestServiceClient) GetTelemetryData(ctx context.Context, in *Telemet
 type RequestServiceServer interface {
 	GetLSNodes(context.Context, *TopologyRequest) (*LSNodeResponse, error)
 	GetLSLinks(context.Context, *TopologyRequest) (*LSLinkResponse, error)
-	GetLSPrefix(context.Context, *TopologyRequest) (*LSPrefixResponse, error)
-	GetLSSRv6SID(context.Context, *TopologyRequest) (*LSSRv6SIDResponse, error)
+	GetLSPrefixes(context.Context, *TopologyRequest) (*LSPrefixResponse, error)
+	GetLSSRv6SIDs(context.Context, *TopologyRequest) (*LSSRv6SIDResponse, error)
 	GetTelemetryData(context.Context, *TelemetryRequest) (*TelemetryResponse, error)
 	mustEmbedUnimplementedRequestServiceServer()
 }
@@ -100,11 +100,11 @@ func (UnimplementedRequestServiceServer) GetLSNodes(context.Context, *TopologyRe
 func (UnimplementedRequestServiceServer) GetLSLinks(context.Context, *TopologyRequest) (*LSLinkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLSLinks not implemented")
 }
-func (UnimplementedRequestServiceServer) GetLSPrefix(context.Context, *TopologyRequest) (*LSPrefixResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLSPrefix not implemented")
+func (UnimplementedRequestServiceServer) GetLSPrefixes(context.Context, *TopologyRequest) (*LSPrefixResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLSPrefixes not implemented")
 }
-func (UnimplementedRequestServiceServer) GetLSSRv6SID(context.Context, *TopologyRequest) (*LSSRv6SIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLSSRv6SID not implemented")
+func (UnimplementedRequestServiceServer) GetLSSRv6SIDs(context.Context, *TopologyRequest) (*LSSRv6SIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLSSRv6SIDs not implemented")
 }
 func (UnimplementedRequestServiceServer) GetTelemetryData(context.Context, *TelemetryRequest) (*TelemetryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTelemetryData not implemented")
@@ -158,38 +158,38 @@ func _RequestService_GetLSLinks_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RequestService_GetLSPrefix_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RequestService_GetLSPrefixes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TopologyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RequestServiceServer).GetLSPrefix(ctx, in)
+		return srv.(RequestServiceServer).GetLSPrefixes(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/requestservice.RequestService/GetLSPrefix",
+		FullMethod: "/requestservice.RequestService/GetLSPrefixes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RequestServiceServer).GetLSPrefix(ctx, req.(*TopologyRequest))
+		return srv.(RequestServiceServer).GetLSPrefixes(ctx, req.(*TopologyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RequestService_GetLSSRv6SID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RequestService_GetLSSRv6SIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TopologyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RequestServiceServer).GetLSSRv6SID(ctx, in)
+		return srv.(RequestServiceServer).GetLSSRv6SIDs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/requestservice.RequestService/GetLSSRv6SID",
+		FullMethod: "/requestservice.RequestService/GetLSSRv6SIDs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RequestServiceServer).GetLSSRv6SID(ctx, req.(*TopologyRequest))
+		return srv.(RequestServiceServer).GetLSSRv6SIDs(ctx, req.(*TopologyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -228,12 +228,12 @@ var RequestService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RequestService_GetLSLinks_Handler,
 		},
 		{
-			MethodName: "GetLSPrefix",
-			Handler:    _RequestService_GetLSPrefix_Handler,
+			MethodName: "GetLSPrefixes",
+			Handler:    _RequestService_GetLSPrefixes_Handler,
 		},
 		{
-			MethodName: "GetLSSRv6SID",
-			Handler:    _RequestService_GetLSSRv6SID_Handler,
+			MethodName: "GetLSSRv6SIDs",
+			Handler:    _RequestService_GetLSSRv6SIDs_Handler,
 		},
 		{
 			MethodName: "GetTelemetryData",
