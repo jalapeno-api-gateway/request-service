@@ -62,10 +62,12 @@ github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFb
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab h1:HqW4xhhynfjrtEiiSGcQUd6vrK23iMam1FO8rI7mwig=
 github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab/go.mod h1:qj24IKcXYK6Iy9ceXlo3Tc+vtHo9lIhSX5JddghvEPo=
-github.com/jalapeno-api-gateway/jagw-core v0.0.0-20210930064513-e633e346a58f h1:Ce2oh+Ce6bj3eN1cxdC2eAlauHpcGkRBNyhzuUjQ33I=
-github.com/jalapeno-api-gateway/jagw-core v0.0.0-20210930064513-e633e346a58f/go.mod h1:fkZdojcIvilo+8KXYGsuK7YV68tT2dAIf9i2FvGQPCM=
-github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211018181244-71e0fec46fdf h1:WiOYAOImr8FyPbIt8VTKhHZ4B0ju7rfeU5+6j8qaERM=
-github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211018181244-71e0fec46fdf/go.mod h1:hPnCjb90PbybI5KGH5JVksnF6903Y2okKJ2Fs5pJW5U=
+github.com/jalapeno-api-gateway/jagw-core v1.0.0-beta h1:JbhrA8PO22tZPx2Ok3IkxTcbnnNNw306O3HjN5fkpH8=
+github.com/jalapeno-api-gateway/jagw-core v1.0.0-beta/go.mod h1:fkZdojcIvilo+8KXYGsuK7YV68tT2dAIf9i2FvGQPCM=
+github.com/jalapeno-api-gateway/jagw-core v1.0.0-beta.0.20211018192932-08e8ac895c45 h1:H8hwrysizMIrrD1sogOm+S7NEqDDa8g8U6NKpiSKSxk=
+github.com/jalapeno-api-gateway/jagw-core v1.0.0-beta.0.20211018192932-08e8ac895c45/go.mod h1:fkZdojcIvilo+8KXYGsuK7YV68tT2dAIf9i2FvGQPCM=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211018191159-7a06267b46bc h1:u4XYlZdzYp8NLEKb8ZUYwphP/kOVzrQZxcHKTtbumTY=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211018191159-7a06267b46bc/go.mod h1:hPnCjb90PbybI5KGH5JVksnF6903Y2okKJ2Fs5pJW5U=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=

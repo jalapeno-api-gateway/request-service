@@ -61,6 +61,10 @@ func unmarshalObject(bytes []byte, className class.Class) interface{} {
 			document := topology.LSSRv6SID{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
+		case class.LSNodeEdge:
+			document := topology.LSNodeEdge{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
 		default: return nil
 	}
 }
