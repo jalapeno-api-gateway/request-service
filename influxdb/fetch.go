@@ -17,28 +17,28 @@ const (
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
 
-func FetchOutputDataRate(ipv4address string) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", DataRateIdentifier, ipv4address)
+func FetchOutputDataRate(hostname string, linkId int32) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", DataRateIdentifier, hostname, linkId)
 	return fetchInt64Value(queryString)
 }
 
-func FetchPacketsSent(ipv4address string) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", PacketsSentIdentifier, ipv4address)
+func FetchPacketsSent(hostname string, linkId int32) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", PacketsSentIdentifier, hostname, linkId)
 	return fetchInt64Value(queryString)
 }
 
-func FetchPacketsReceived(ipv4address string) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", PacketsReceivedIdentifier, ipv4address)
+func FetchPacketsReceived(hostname string, linkId int32) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", PacketsReceivedIdentifier, hostname, linkId)
 	return fetchInt64Value(queryString)
 }
 
-func FetchState(ipv4address string) (string, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", StateIdentifier, ipv4address)
+func FetchState(hostname string, linkId int32) (string, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", StateIdentifier, hostname, linkId)
 	return fetchStringValue(queryString)
 }
 
-func FetchLastStateTransitionTime(ipv4address string) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"ip_information/ip_address\" = '%s' AND time < now() and time > now() - 5m", LastStateTransitionTimeIdentifier, ipv4address)
+func FetchLastStateTransitionTime(hostname string, linkId int32) (int64, error) {
+	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", LastStateTransitionTimeIdentifier, hostname, linkId)
 	return fetchInt64Value(queryString)
 }
 

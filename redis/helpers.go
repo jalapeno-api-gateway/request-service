@@ -45,20 +45,24 @@ func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
 
 func unmarshalObject(bytes []byte, className class.Class) interface{} {
 	switch className {
-		case class.LSNode:
-			document := topology.LSNode{}
+		case class.LsNode:
+			document := topology.LsNode{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
-		case class.LSLink:
-			document := topology.LSLink{}
+		case class.LsLink:
+			document := topology.LsLink{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
-		case class.LSPrefix:
-			document := topology.LSPrefix{}
+		case class.LsPrefix:
+			document := topology.LsPrefix{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
-		case class.LSSRv6SID:
-			document := topology.LSSRv6SID{}
+		case class.LsSrv6Sid:
+			document := topology.LsSrv6Sid{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
+		case class.LsNodeEdge:
+			document := topology.LsNodeEdge{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
 		default: return nil

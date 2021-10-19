@@ -7,8 +7,9 @@ import (
 
 	"github.com/jalapeno-api-gateway/request-service/helpers"
 	"github.com/jalapeno-api-gateway/request-service/influxdb"
-	"github.com/jalapeno-api-gateway/request-service/proto/requestservice"
+	"github.com/jalapeno-api-gateway/request-service/requestservice"
 	"github.com/jalapeno-api-gateway/request-service/redis"
+	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
 	"google.golang.org/grpc"
 )
 
@@ -31,7 +32,7 @@ func main() {
 		grpcServer.Stop()
 	}()
 
-	requestservice.RegisterRequestServiceServer(grpcServer, requestservice.NewServer())
+	jagw.RegisterRequestServiceServer(grpcServer, requestservice.NewServer())
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve gRPC server: %v", err)
 	}
