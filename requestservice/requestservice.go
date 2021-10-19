@@ -20,12 +20,12 @@ func NewServer() *requestServiceServer {
 func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsNodeResponse, error) {
 	log.Printf("SR-App requesting Nodes\n")
 
-	documents := fetchDocuments(ctx, request.Keys, class.LSNode)
+	documents := fetchDocuments(ctx, request.Keys, class.LsNode)
 
 	response := &jagw.LsNodeResponse{}
 
 	for _, document := range documents {
-		lsNode := convertLSNode(document, request.PropertyNames)
+		lsNode := convertLsNode(document, request.PropertyNames)
 		response.LsNodes = append(response.LsNodes, lsNode)
 	}
 	
@@ -35,12 +35,12 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsLinkResponse, error) {
 	log.Printf("SR-App requesting Links\n")
 
-	documents := fetchDocuments(ctx, request.Keys, class.LSLink)
+	documents := fetchDocuments(ctx, request.Keys, class.LsLink)
 
 	response := &jagw.LsLinkResponse{}
 
 	for _, document := range documents {
-		lsLink := convertLSLink(document, request.PropertyNames)
+		lsLink := convertLsLink(document, request.PropertyNames)
 		response.LsLinks = append(response.LsLinks, lsLink)
 	}
 	
@@ -50,12 +50,12 @@ func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.Top
 func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsPrefixResponse, error) {
 	log.Printf("SR-App requesting LSPrefix\n")
 
-	documents := fetchDocuments(ctx, request.Keys, class.LSPrefix)
+	documents := fetchDocuments(ctx, request.Keys, class.LsPrefix)
 
 	response := &jagw.LsPrefixResponse{}
 
 	for _, document := range documents {
-		lsPrefix := convertLSPrefix(document, request.PropertyNames)
+		lsPrefix := convertLsPrefix(document, request.PropertyNames)
 		response.LsPrefixes = append(response.LsPrefixes, lsPrefix)
 	}
 	
@@ -65,12 +65,12 @@ func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.
 func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsSrv6SidResponse, error) {
 	log.Printf("SR-App requesting LSSRv6SID\n")
 
-	documents := fetchDocuments(ctx, request.Keys, class.LSSRv6SID)
+	documents := fetchDocuments(ctx, request.Keys, class.LsSrv6Sid)
 
 	response := &jagw.LsSrv6SidResponse{}
 
 	for _, document := range documents {
-		lsSRv6SID := convertLSSRv6SID(document, request.PropertyNames)
+		lsSRv6SID := convertLsSrv6Sid(document, request.PropertyNames)
 		response.LsSrv6Sids = append(response.LsSrv6Sids, lsSRv6SID)
 	}
 	
@@ -80,12 +80,12 @@ func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.
 func (s *requestServiceServer) GetLsNodeEdge(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsNodeEdgeResponse, error) {
 	log.Printf("SR-App requesting LSNodeEdges\n")
 
-	documents := fetchDocuments(ctx, request.Keys, class.LSSRv6SID)
+	documents := fetchDocuments(ctx, request.Keys, class.LsNodeEdge)
 
 	response := &jagw.LsNodeEdgeResponse{}
 
 	for _, document := range documents {
-		lsNodeEdge := convertLSNodeEdge(document, request.PropertyNames)
+		lsNodeEdge := convertLsNodeEdge(document, request.PropertyNames)
 		response.LsNodeEdges = append(response.LsNodeEdges, lsNodeEdge)
 	}
 	

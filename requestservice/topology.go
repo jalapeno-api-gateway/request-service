@@ -7,159 +7,159 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func convertLSNode(doc interface{}, propertyNames []string) *jagw.LsNode {
-	document := doc.(topology.LSNode)
+func convertLsNode(doc interface{}, propertyNames []string) *jagw.LsNode {
+	document := doc.(topology.LsNode)
 	lsNode := jagw.LsNode{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
-		propertyNames = property.AllLSNodeProperties
+		propertyNames = property.AllLsNodeProperties
 	}
 
 	for _, propertyName := range propertyNames {
 		switch propertyName {
 			case property.Key: lsNode.Key = proto.String(document.Key)
-			case property.ID: lsNode.Id = proto.String(document.ID)
+			case property.Id: lsNode.Id = proto.String(document.Id)
 			case property.RouterHash: lsNode.RouterHash = proto.String(document.RouterHash)
-			case property.DomainID: lsNode.DomainId = proto.Int64(document.DomainID)
-			case property.RouterIP: lsNode.RouterIp = proto.String(document.RouterIP)
+			case property.DomainId: lsNode.DomainId = proto.Int64(document.DomainId)
+			case property.RouterIp: lsNode.RouterIp = proto.String(document.RouterIp)
 			case property.PeerHash: lsNode.PeerHash = proto.String(document.PeerHash)
-			case property.PeerIP: lsNode.PeerIp = proto.String(document.PeerIP)
-			case property.PeerASN: lsNode.PeerAsn = proto.Int32(document.PeerASN)
+			case property.PeerIp: lsNode.PeerIp = proto.String(document.PeerIp)
+			case property.PeerAsn: lsNode.PeerAsn = proto.Int32(document.PeerAsn)
 			case property.Timestamp: lsNode.Timestamp = proto.String(document.Timestamp)
-			case property.IGPRouterID: lsNode.IgpRouterId = proto.String(document.IGPRouterID)
-			case property.ASN: lsNode.Asn = proto.Uint32(document.ASN)
-			case property.MTID: lsNode.Mtid = convertMTIDSlice(document.MTID)
-			case property.AreaID: lsNode.AreaId = proto.String(document.AreaID)
+			case property.IgpRouterId: lsNode.IgpRouterId = proto.String(document.IgpRouterId)
+			case property.Asn: lsNode.Asn = proto.Uint32(document.Asn)
+			case property.Mtid: lsNode.Mtid = convertMtidSlice(document.Mtid)
+			case property.AreaId: lsNode.AreaId = proto.String(document.AreaId)
 			case property.Protocol: lsNode.Protocol = proto.String(document.Protocol)
-			case property.ProtocolID: lsNode.ProtocolId = proto.Uint32(uint32(document.ProtocolID))
+			case property.ProtocolId: lsNode.ProtocolId = proto.Uint32(uint32(document.ProtocolId))
 			case property.Name: lsNode.Name = proto.String(document.Name)
 			case property.IsPrepolicy: lsNode.IsPrepolicy = proto.Bool(document.IsPrepolicy)
-			case property.IsAdjRIBIn: lsNode.IsAdjRibIn = proto.Bool(document.IsAdjRIBIn)
+			case property.IsAdjRibIn: lsNode.IsAdjRibIn = proto.Bool(document.IsAdjRibIn)
 		}
 	}
 	
 	return &lsNode
 }
 
-func convertLSLink(doc interface{}, propertyNames []string) *jagw.LsLink {
-	document := doc.(topology.LSLink)
+func convertLsLink(doc interface{}, propertyNames []string) *jagw.LsLink {
+	document := doc.(topology.LsLink)
 	lsLink := jagw.LsLink{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
-		propertyNames = property.AllLSLinkProperties
+		propertyNames = property.AllLsLinkProperties
 	}
 
 	for _, propertyName := range propertyNames {
 		switch propertyName {
 			case property.Key: lsLink.Key = proto.String(document.Key)
-			case property.ID: lsLink.Id = proto.String(document.ID)
+			case property.Id: lsLink.Id = proto.String(document.Id)
 			case property.RouterHash: lsLink.RouterHash = proto.String(document.RouterHash)
-			case property.RouterIP: lsLink.RouterIp = proto.String(document.RouterIP)
-			case property.DomainID: lsLink.DomainId = proto.Int64(document.DomainID)
+			case property.RouterIp: lsLink.RouterIp = proto.String(document.RouterIp)
+			case property.DomainId: lsLink.DomainId = proto.Int64(document.DomainId)
 			case property.PeerHash: lsLink.PeerHash = proto.String(document.PeerHash)
-			case property.PeerIP: lsLink.PeerIp = proto.String(document.PeerIP)
-			case property.PeerASN: lsLink.PeerAsn = proto.Int32(document.PeerASN)
+			case property.PeerIp: lsLink.PeerIp = proto.String(document.PeerIp)
+			case property.PeerAsn: lsLink.PeerAsn = proto.Int32(document.PeerAsn)
 			case property.Timestamp: lsLink.Timestamp = proto.String(document.Timestamp)
-			case property.IGPRouterID: lsLink.IgpRouterId = proto.String(document.IGPRouterID)
+			case property.IgpRouterId: lsLink.IgpRouterId = proto.String(document.IgpRouterId)
 			case property.Protocol: lsLink.Protocol = proto.String(document.Protocol)
-			case property.AreaID: lsLink.AreaId = proto.String(document.AreaID)
+			case property.AreaId: lsLink.AreaId = proto.String(document.AreaId)
 			case property.Nexthop: lsLink.Nexthop = proto.String(document.Nexthop)
-			case property.MTID: lsLink.Mtid = convertMTID(document.MTID)
-			case property.LocalLinkIP: lsLink.LocalLinkIp = proto.String(document.LocalLinkIP)
-			case property.RemoteLinkIP: lsLink.RemoteLinkIp = proto.String(document.RemoteLinkIP)
-			case property.IGPMetric: lsLink.IgpMetric = proto.Uint32(document.IGPMetric)
+			case property.Mtid: lsLink.Mtid = convertMtid(document.Mtid)
+			case property.LocalLinkIp: lsLink.LocalLinkIp = proto.String(document.LocalLinkIp)
+			case property.RemoteLinkIp: lsLink.RemoteLinkIp = proto.String(document.RemoteLinkIp)
+			case property.IgpMetric: lsLink.IgpMetric = proto.Uint32(document.IgpMetric)
 			case property.RemoteNodeHash: lsLink.RemoteNodeHash = proto.String(document.RemoteNodeHash)
 			case property.LocalNodeHash: lsLink.LocalNodeHash = proto.String(document.LocalNodeHash)
-			case property.RemoteIGPRouterID: lsLink.RemoteIgpRouterId = proto.String(document.RemoteIGPRouterID)
+			case property.RemoteIgpRouterId: lsLink.RemoteIgpRouterId = proto.String(document.RemoteIgpRouterId)
 		}
 	}
 
 	return &lsLink
 }
 
-func convertLSPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
-	document := doc.(*topology.LSPrefix)
+func convertLsPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
+	document := doc.(*topology.LsPrefix)
 	lsPrefix := jagw.LsPrefix{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
-		propertyNames = property.AllLSPrefixProperties
+		propertyNames = property.AllLsPrefixProperties
 	}
 
 	for _, propertyName := range propertyNames {
 		switch propertyName {
 			case property.Key: lsPrefix.Key = proto.String(document.Key)
-			case property.ID: lsPrefix.Id = proto.String(document.ID)
+			case property.Id: lsPrefix.Id = proto.String(document.Id)
 			case property.RouterHash: lsPrefix.RouterHash = proto.String(document.RouterHash)
-			case property.RouterIP: lsPrefix.RouterIp = proto.String(document.RouterIP)
-			case property.DomainID: lsPrefix.DomainId = proto.Int64(document.DomainID)
+			case property.RouterIp: lsPrefix.RouterIp = proto.String(document.RouterIp)
+			case property.DomainId: lsPrefix.DomainId = proto.Int64(document.DomainId)
 			case property.PeerHash: lsPrefix.PeerHash = proto.String(document.PeerHash)
-			case property.PeerIP: lsPrefix.PeerIp = proto.String(document.PeerIP)
-			case property.PeerASN: lsPrefix.PeerAsn = proto.Int32(document.PeerASN)
+			case property.PeerIp: lsPrefix.PeerIp = proto.String(document.PeerIp)
+			case property.PeerAsn: lsPrefix.PeerAsn = proto.Int32(document.PeerAsn)
 			case property.Timestamp: lsPrefix.Timestamp = proto.String(document.Timestamp)
-			case property.IGPRouterID: lsPrefix.IgpRouterId = proto.String(document.IGPRouterID)
+			case property.IgpRouterId: lsPrefix.IgpRouterId = proto.String(document.IgpRouterId)
 			case property.Protocol: lsPrefix.Protocol = proto.String(document.Protocol)
-			case property.AreaID: lsPrefix.AreaId = proto.String(document.AreaID)
+			case property.AreaId: lsPrefix.AreaId = proto.String(document.AreaId)
 			case property.Nexthop: lsPrefix.Nexthop = proto.String(document.Nexthop)
 			case property.LocalNodeHash: lsPrefix.LocalNodeHash = proto.String(document.LocalNodeHash)
-			case property.MTID: lsPrefix.Mtid = convertMTID(document.MTID)
+			case property.Mtid: lsPrefix.Mtid = convertMtid(document.Mtid)
 			case property.Prefix: lsPrefix.Prefix = proto.String(document.Prefix)
 			case property.PrefixLen: lsPrefix.PrefixLen = proto.Int32(document.PrefixLen)
 			case property.PrefixMetric: lsPrefix.PrefixMetric = proto.Uint32(document.PrefixMetric)
 			case property.IsPrepolicy: lsPrefix.IsPrepolicy = proto.Bool(document.IsPrepolicy)
-			case property.IsAdjRIBIn: lsPrefix.IsAdjRibIn = proto.Bool(document.IsAdjRIBIn)
+			case property.IsAdjRibIn: lsPrefix.IsAdjRibIn = proto.Bool(document.IsAdjRibIn)
 		}
 	}
 
 	return &lsPrefix
 }
 
-func convertLSSRv6SID(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
-	document := doc.(*topology.LSSRv6SID)
+func convertLsSrv6Sid(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
+	document := doc.(*topology.LsSrv6Sid)
 	lsSRv6SID := jagw.LsSrv6Sid{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
-		propertyNames = property.AllLSLinkProperties
+		propertyNames = property.AllLsSrv6SidProperties
 	}
 
 	for _, propertyName := range propertyNames {
 		switch propertyName {
 			case property.Key: lsSRv6SID.Key = proto.String(document.Key)
-			case property.ID: lsSRv6SID.Id = proto.String(document.ID)
+			case property.Id: lsSRv6SID.Id = proto.String(document.Id)
 			case property.RouterHash: lsSRv6SID.RouterHash = proto.String(document.RouterHash)
-			case property.RouterIP: lsSRv6SID.RouterIp = proto.String(document.RouterIP)
-			case property.DomainID: lsSRv6SID.DomainId = proto.Int64(document.DomainID)
+			case property.RouterIp: lsSRv6SID.RouterIp = proto.String(document.RouterIp)
+			case property.DomainId: lsSRv6SID.DomainId = proto.Int64(document.DomainId)
 			case property.PeerHash: lsSRv6SID.PeerHash = proto.String(document.PeerHash)
-			case property.PeerIP: lsSRv6SID.PeerIp = proto.String(document.PeerIP)
-			case property.PeerASN: lsSRv6SID.PeerAsn = proto.Int32(document.PeerASN)
+			case property.PeerIp: lsSRv6SID.PeerIp = proto.String(document.PeerIp)
+			case property.PeerAsn: lsSRv6SID.PeerAsn = proto.Int32(document.PeerAsn)
 			case property.Timestamp: lsSRv6SID.Timestamp = proto.String(document.Timestamp)
-			case property.IGPRouterID: lsSRv6SID.IgpRouterId = proto.String(document.IGPRouterID)
-			case property.LocalNodeASN: lsSRv6SID.LocalNodeAsn = proto.Uint32(document.LocalNodeASN)
+			case property.IgpRouterId: lsSRv6SID.IgpRouterId = proto.String(document.IgpRouterId)
+			case property.LocalNodeAsn: lsSRv6SID.LocalNodeAsn = proto.Uint32(document.LocalNodeAsn)
 			case property.Protocol: lsSRv6SID.Protocol = proto.String(document.Protocol)
 			case property.Nexthop: lsSRv6SID.Nexthop = proto.String(document.Nexthop)
 			case property.LocalNodeHash: lsSRv6SID.LocalNodeHash = proto.String(document.LocalNodeHash)
-			case property.MTID: lsSRv6SID.Mtid = convertMTID(document.MTID)
-			case property.IGPFlags: lsSRv6SID.IgpFlags = proto.Uint32(uint32(document.IGPFlags))
+			case property.Mtid: lsSRv6SID.Mtid = convertMtid(document.Mtid)
+			case property.IgpFlags: lsSRv6SID.IgpFlags = proto.Uint32(uint32(document.IgpFlags))
 			case property.IsPrepolicy: lsSRv6SID.IsPrepolicy = proto.Bool(document.IsPrepolicy)
-			case property.IsAdjRIBIn: lsSRv6SID.IsAdjRibIn = proto.Bool(document.IsAdjRIBIn)
-			case property.SRv6SID: lsSRv6SID.Srv6Sid = proto.String(document.SRv6SID)
+			case property.IsAdjRibIn: lsSRv6SID.IsAdjRibIn = proto.Bool(document.IsAdjRibIn)
+			case property.Srv6Sid: lsSRv6SID.Srv6Sid = proto.String(document.Srv6Sid)
 		}
 	}
 
 	return &lsSRv6SID
 }
 
-func convertLSNodeEdge(doc interface{}, propertyNames []string) *jagw.LsNodeEdge {
-	document := doc.(*topology.LSNodeEdge)
+func convertLsNodeEdge(doc interface{}, propertyNames []string) *jagw.LsNodeEdge {
+	document := doc.(*topology.LsNodeEdge)
 	lsNodeEdge := jagw.LsNodeEdge{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
-		propertyNames = property.AllLSLinkProperties
+		propertyNames = property.AllLsNodeEdgeProperties
 	}
 
 	for _, propertyName := range propertyNames {
 		switch propertyName {
 			case property.Key: lsNodeEdge.Key = proto.String(document.Key)
-			case property.ID: lsNodeEdge.Id = proto.String(document.ID)
+			case property.Id: lsNodeEdge.Id = proto.String(document.Id)
 			case property.From: lsNodeEdge.From = proto.String(document.From)
 			case property.To: lsNodeEdge.To = proto.String(document.To)
 			case property.Link: lsNodeEdge.Link = proto.String(document.Link)
@@ -169,18 +169,18 @@ func convertLSNodeEdge(doc interface{}, propertyNames []string) *jagw.LsNodeEdge
 	return &lsNodeEdge
 }
 
-func convertMTIDSlice(documents []*topology.MultiTopologyIdentifier) []*jagw.MultiTopologyIdentifier {
+func convertMtidSlice(documents []*topology.MultiTopologyIdentifier) []*jagw.MultiTopologyIdentifier {
 	mtids := []*jagw.MultiTopologyIdentifier{}
 	for _, doc := range documents {
-		mtids = append(mtids, convertMTID(doc))
+		mtids = append(mtids, convertMtid(doc))
 	}
 	return mtids
 }
 
-func convertMTID(doc *topology.MultiTopologyIdentifier) *jagw.MultiTopologyIdentifier {
+func convertMtid(doc *topology.MultiTopologyIdentifier) *jagw.MultiTopologyIdentifier {
 	return &jagw.MultiTopologyIdentifier{
 		OFlag: proto.Bool(doc.OFlag),
 		AFlag: proto.Bool(doc.AFlag),
-		Mtid: proto.Uint32(uint32(doc.MTID)),
+		Mtid: proto.Uint32(uint32(doc.Mtid)),
 	}
 }
