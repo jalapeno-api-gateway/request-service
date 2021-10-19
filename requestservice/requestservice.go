@@ -77,7 +77,7 @@ func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.
 	return response, nil
 }
 
-func (s *requestServiceServer) GetLsNodeEdge(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsNodeEdgeResponse, error) {
+func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsNodeEdgeResponse, error) {
 	log.Printf("SR-App requesting LSNodeEdges\n")
 
 	documents := fetchDocuments(ctx, request.Keys, class.LsNodeEdge)

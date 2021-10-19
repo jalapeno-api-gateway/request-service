@@ -78,7 +78,7 @@ func convertLsLink(doc interface{}, propertyNames []string) *jagw.LsLink {
 }
 
 func convertLsPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
-	document := doc.(*topology.LsPrefix)
+	document := doc.(topology.LsPrefix)
 	lsPrefix := jagw.LsPrefix{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
@@ -114,7 +114,7 @@ func convertLsPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
 }
 
 func convertLsSrv6Sid(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
-	document := doc.(*topology.LsSrv6Sid)
+	document := doc.(topology.LsSrv6Sid)
 	lsSRv6SID := jagw.LsSrv6Sid{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
@@ -149,7 +149,7 @@ func convertLsSrv6Sid(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
 }
 
 func convertLsNodeEdge(doc interface{}, propertyNames []string) *jagw.LsNodeEdge {
-	document := doc.(*topology.LsNodeEdge)
+	document := doc.(topology.LsNodeEdge)
 	lsNodeEdge := jagw.LsNodeEdge{Key: proto.String(document.Key)}
 
 	if len(propertyNames) == 0 {
