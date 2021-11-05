@@ -1,0 +1,15 @@
+FROM golang:1.15-alpine
+
+RUN apk add --no-cache git
+WORKDIR /tmp/request-service
+
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 go build -o /usr/bin/request-service .
+
+LABEL maintainer="Michel Bongard"
+
+ENTRYPOINT [ "/usr/bin/request-service" ]
