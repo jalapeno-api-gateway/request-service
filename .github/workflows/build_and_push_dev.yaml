@@ -25,4 +25,4 @@ jobs:
         with:
           file: ./Dockerfile.dev
           push: true
-          tags: insost/jagw-cache-service:dev-${{ steps.get_branch.outputs.branch }}
+          tags: insost/jagw-request-service:dev-${{ steps.get_branch.outputs.branch }}
