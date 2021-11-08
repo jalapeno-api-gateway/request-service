@@ -67,10 +67,10 @@ github.com/iancoleman/strcase v0.2.0 h1:05I4QRnGpI0m37iZQRuskXh+w77mr6Z41lwQzuHL
 github.com/iancoleman/strcase v0.2.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
 github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab h1:HqW4xhhynfjrtEiiSGcQUd6vrK23iMam1FO8rI7mwig=
 github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab/go.mod h1:qj24IKcXYK6Iy9ceXlo3Tc+vtHo9lIhSX5JddghvEPo=
-github.com/jalapeno-api-gateway/jagw-core v1.0.1 h1:qHCg4g9zAp2Lkt9SCbK2gBFkN5IGVpYIuU2Eaozuwuw=
-github.com/jalapeno-api-gateway/jagw-core v1.0.1/go.mod h1:fkZdojcIvilo+8KXYGsuK7YV68tT2dAIf9i2FvGQPCM=
-github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211108142353-4fce9b231e27 h1:fRDquTTKrw34ja/EA+s62Tcky/Ez/Ii1WZPjRY/4/Z4=
-github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20211108142353-4fce9b231e27/go.mod h1:CPDdUkBdUYu8OShpuAdGjOUNDBef6dvfmJGVtEKH/g8=
+github.com/jalapeno-api-gateway/jagw-core v1.1.0 h1:cmxul52H2/HqDjStbGJAkflmD9U4ydpmFUewwmuA5BQ=
+github.com/jalapeno-api-gateway/jagw-core v1.1.0/go.mod h1:fkZdojcIvilo+8KXYGsuK7YV68tT2dAIf9i2FvGQPCM=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v1.1.0 h1:PMFh2RGixlP6sDbz9j95DWgw8/PAUJEI5XoesBLwvo0=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v1.1.0/go.mod h1:CPDdUkBdUYu8OShpuAdGjOUNDBef6dvfmJGVtEKH/g8=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
