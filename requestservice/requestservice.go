@@ -93,14 +93,9 @@ func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw
 }
 
 func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *jagw.TelemetryRequest) (*jagw.TelemetryResponse, error) {
-	log.Printf("SR-App requesting DataRates\n")
-
-	response := &jagw.TelemetryResponse{}
-
-	for _, interfaceId := range request.InterfaceIds {
-		telemetryData := fetchTelemetryData(interfaceId, request.PropertyNames)
-		response.TelemetryData = append(response.TelemetryData, telemetryData)
-	}
-
-	return response, nil
+	log.Printf("SR-App requesting TelemetryData\n")
+	
+	telemetryData := fetchTelemetryData(request)
+	
+	return &jagw.TelemetryResponse{TelemetryData: telemetryData}, nil
 }
