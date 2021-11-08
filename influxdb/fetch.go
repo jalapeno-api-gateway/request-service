@@ -5,6 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
+
+	client "github.com/influxdata/influxdb1-client/v2"
+	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
+	"github.com/iancoleman/strcase"
 )
 
 const (
@@ -17,52 +22,150 @@ const (
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
 
-func FetchOutputDataRate(hostname string, linkId int32) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", DataRateIdentifier, hostname, linkId)
-	return fetchInt64Value(queryString)
-}
+func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
+	selection := formatSelection(request.Properties)
+	filters := formatFilters(request)
+	log.Printf("Selection: %s", selection)
+	log.Printf("SensorPath: %s", *request.SensorPath)
+	log.Printf("Filters: %s", filters)
+	queryString := fmt.Sprintf("select %s FROM \"%s\" WHERE %s", selection, *request.SensorPath, filters)
 
-func FetchPacketsSent(hostname string, linkId int32) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", PacketsSentIdentifier, hostname, linkId)
-	return fetchInt64Value(queryString)
-}
-
-func FetchPacketsReceived(hostname string, linkId int32) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", PacketsReceivedIdentifier, hostname, linkId)
-	return fetchInt64Value(queryString)
-}
-
-func FetchState(hostname string, linkId int32) (string, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", StateIdentifier, hostname, linkId)
-	return fetchStringValue(queryString)
-}
-
-func FetchLastStateTransitionTime(hostname string, linkId int32) (int64, error) {
-	queryString := fmt.Sprintf("select last(\"%s\") FROM \"Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface\" WHERE \"source\" = '%s' AND \"if_index\" = %d AND time < now() AND time > now() - 5m", LastStateTransitionTimeIdentifier, hostname, linkId)
-	return fetchInt64Value(queryString)
-}
-
-func fetchStringValue(queryString string) (string, error) {
 	response := queryInflux(queryString)
+
+	if len(response.Results[0].Series) == 0 {
+		return []string{}, errors.New("error 1")
+	}
+
+	s, _ := json.MarshalIndent(response, "", "  ")
+	fmt.Printf("%s\n\n", string(s))
+
+	return createJSONArray(response), nil
+}
+
+func formatSelection(properties []string) string {
+	var b strings.Builder
+	for i, property := range properties {
+		b.Reset()
+		if property == "*" {
+			b.WriteString(property)
+		} else if strings.Contains(property, "*") {
+			// TODO This is not allowed, return error or something
+		} else {
+			b.WriteString("\"")
+			b.WriteString(property)
+			b.WriteString("\"")
+		}
+		properties[i] = b.String()
+	}
+	return strings.Join(properties, ", ")
+}
+
+func formatFilters(request *jagw.TelemetryRequest) string {
+	var b strings.Builder
+	formatStringFilters(&b, request.StringFilters)
 	
-	if len(response.Results[0].Series) == 0 {
-		return "", errors.New("no int64 value found for this ipv4address")
+	if request.RangeFilter == nil {
+		trimmed := removeTrailingCharacters(b.String(), 5) // remove trailing instance of " AND "
+		return trimmed + " limit 1"
+	} else {
+		formatRangeFilter(&b, request.RangeFilter)
+		return b.String()
 	}
-
-	value := response.Results[0].Series[0].Values[0][1].(string)
-	return value, nil
 }
 
-func fetchInt64Value(queryString string) (int64, error) {
-	response := queryInflux(queryString)
+func formatStringFilters(b *strings.Builder, stringFilters []*jagw.StringFilter) {
+	for _, stringFilter := range stringFilters {
+		b.WriteString("\"")
+		b.WriteString(*stringFilter.Property)
+		b.WriteString("\"")
+		switch *stringFilter.Operator {
+			case jagw.StringOperator_EQUAL: b.WriteString(" = ")
+			case jagw.StringOperator_NOT_EQUAL: b.WriteString(" != ")
+		}
+		b.WriteString("'")
+		b.WriteString(*stringFilter.Value)
+		b.WriteString("'")
+		b.WriteString(" AND ")
+	}
+}
 
-	if len(response.Results[0].Series) == 0 {
-		return 0, errors.New("no int64 value found for this ipv4address")
+func formatRangeFilter(b *strings.Builder, rangeFilter *jagw.RangeFilter) {
+	b.WriteString("time >= ")
+	fmt.Fprintf(b, "%d", *rangeFilter.EarliestTimestamp)
+	b.WriteString(" AND ")
+	b.WriteString("time <= ")
+	if rangeFilter.LatestTimestamp == nil {
+		b.WriteString("now()")
+	} else {
+		fmt.Fprintf(b, "%d", *rangeFilter.LatestTimestamp)
+	}
+}
+
+func createJSONArray(response *client.Response) []string {
+	series := response.Results[0].Series[0]
+
+	formattedPropertyNames := make([]string, len(series.Columns))
+	for i, property := range series.Columns {
+		formattedPropertyNames[i] = formatPropertyName(property)
 	}
 
-	value, err := response.Results[0].Series[0].Values[0][1].(json.Number).Int64()
-	if err != nil {
-		log.Fatalf("Could not convert packets received to Int64")
+	jsonArray := make([]string, len(series.Values))
+	for i := 0; i < len(jsonArray); i++ {
+		jsonArray[i] = createSingleJSON(formattedPropertyNames, series.Values[i])
 	}
-	return value, nil
+
+	return jsonArray
+}
+
+func createSingleJSON(formattedPropertyNames []string, values []interface{}) string {
+	var b strings.Builder
+	b.WriteString("{")
+	
+	for i := 0; i < len(formattedPropertyNames); i++ {		
+		if values[i] != nil {
+			b.WriteString("\"")
+			b.WriteString(formattedPropertyNames[i])
+			b.WriteString("\"")
+			b.WriteString(": ")
+			switch values[i].(type) {
+				case string: fmt.Fprintf(&b, "\"%v\"", values[i])
+				default: fmt.Fprintf(&b, "%v", values[i])
+			}
+			b.WriteString(", ")
+		} else {
+			// TODO Handle case "No value for this property"
+		}
+	}
+	
+	trimmed := removeTrailingCharacters(b.String(), 2) // Remove trailing ", "
+	log.Printf("%v}\n", trimmed)
+	return trimmed + "}"
+}
+
+func removeTrailingCharacters(s string, numberOfCharacters int) string {
+	if len(s) > 0 {
+		s = s[:len(s) - numberOfCharacters]
+	}
+	return s
+}
+
+/*
+Converts a string in the format of:
+   "data_rates/output_data_rate"
+to:
+   "DataRates_OutputDataRate"
+*/
+func formatPropertyName(propertyName string) string {
+	names := strings.Split(propertyName, "/")
+	var b strings.Builder
+	
+	lastIndex := len(names) -1
+	for i, name := range names {
+		b.WriteString(strcase.ToCamel(name))
+		if i < lastIndex {
+			b.WriteString("_")
+		}
+	}
+
+	return b.String()
 }
