@@ -1,7 +1,6 @@
 package influxdb
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -25,9 +24,6 @@ const (
 func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
 	selection := formatSelection(request.Properties)
 	filters := formatFilters(request)
-	log.Printf("Selection: %s", selection)
-	log.Printf("SensorPath: %s", *request.SensorPath)
-	log.Printf("Filters: %s", filters)
 	queryString := fmt.Sprintf("select %s FROM \"%s\" WHERE %s", selection, *request.SensorPath, filters)
 
 	response := queryInflux(queryString)
@@ -35,9 +31,6 @@ func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
 	if len(response.Results[0].Series) == 0 {
 		return []string{}, errors.New("error 1")
 	}
-
-	s, _ := json.MarshalIndent(response, "", "  ")
-	fmt.Printf("%s\n\n", string(s))
 
 	return createJSONArray(response), nil
 }
