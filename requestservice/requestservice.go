@@ -32,6 +32,21 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 	return response, nil
 }
 
+func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request *jagw.LsNodeCoordinatesRequest) (*jagw.LsNodeCoordinatesResponse, error) {
+	log.Printf("SR-App requesting Node Coordinates\n")
+
+	documents := fetchDocuments(ctx, request.LsNodeKeys, class.LsNodeCoordinates)
+
+	response := &jagw.LsNodeCoordinatesResponse{}
+
+	for _, document := range documents {
+		lsNode := convertLsNodeCoordinates(document)
+		response.Coordinates = append(response.Coordinates, lsNode)
+	}
+	
+	return response, nil
+}
+
 func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsLinkResponse, error) {
 	log.Printf("SR-App requesting Links\n")
 

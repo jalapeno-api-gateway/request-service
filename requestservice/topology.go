@@ -41,6 +41,16 @@ func convertLsNode(doc interface{}, propertyNames []string) *jagw.LsNode {
 	return &lsNode
 }
 
+func convertLsNodeCoordinates(doc interface{}) *jagw.LsNodeCoordinates {
+	document := doc.(topology.LsNodeCoordinates)
+	return &jagw.LsNodeCoordinates{
+		Key: proto.String(document.Key),
+		LsNodeKey: proto.String(document.LsNodeKey),
+		Latitude: proto.Float64(document.Latitude),
+		Longitude: proto.Float64(document.Longitude),
+	}
+}
+
 func convertLsLink(doc interface{}, propertyNames []string) *jagw.LsLink {
 	document := doc.(topology.LsLink)
 	lsLink := jagw.LsLink{Key: proto.String(document.Key)}
