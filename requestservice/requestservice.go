@@ -2,6 +2,7 @@ package requestservice
 
 import (
 	context "context"
+	"fmt"
 	"log"
 
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
@@ -27,6 +28,26 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 	for _, document := range documents {
 		lsNode := convertLsNode(document, request.PropertyNames)
 		response.LsNodes = append(response.LsNodes, lsNode)
+	}
+	
+	return response, nil
+}
+
+func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request *jagw.LsNodeCoordinatesRequest) (*jagw.LsNodeCoordinatesResponse, error) {
+	log.Printf("SR-App requesting Node Coordinates\n")
+
+	documentKeys := []string{}
+
+	for _, lsNodeKey := range request.LsNodeKeys {
+		documentKeys = append(documentKeys, fmt.Sprintf("%s_Coordinates", lsNodeKey))
+	}
+	
+	documents := fetchDocuments(ctx, documentKeys, class.LsNodeCoordinates)
+	response := &jagw.LsNodeCoordinatesResponse{}
+
+	for _, document := range documents {
+		lsNode := convertLsNodeCoordinates(document)
+		response.Coordinates = append(response.Coordinates, lsNode)
 	}
 	
 	return response, nil

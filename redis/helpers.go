@@ -49,6 +49,10 @@ func unmarshalObject(bytes []byte, className class.Class) interface{} {
 			document := topology.LsNode{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
 			return document
+		case class.LsNodeCoordinates:
+			document := topology.LsNodeCoordinates{}
+			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			return document
 		case class.LsLink:
 			document := topology.LsLink{}
 			handleUnmarshallingError(json.Unmarshal(bytes, &document))
