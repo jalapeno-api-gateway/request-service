@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
+	"github.com/iancoleman/strcase"
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
-	"github.com/iancoleman/strcase"
 )
 
 const (
@@ -20,6 +21,82 @@ const (
 	StateIdentifier                   = "state"
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
+
+func FetchMeasurements() ([]string, error) {
+	queryString := "show measurements"
+	response := queryInflux(queryString)
+
+	measurements := []string{}
+	for _, value := range response.Results[0].Series[0].Values {
+		measurements = append(measurements, fmt.Sprintf("%v", value[0]))
+	}
+
+	return measurements, nil
+}
+
+func FetchColumns(measurement string) ([][]string, error) {
+	tagQueryString := fmt.Sprintf("show tag keys from \"%s\"", measurement)
+	fieldQueryString := fmt.Sprintf("show field keys from \"%s\"", measurement)
+
+	tagResponse := queryInflux(tagQueryString)
+	fieldResponse := queryInflux(fieldQueryString)
+
+	columns := [][]string{{},{},{},{}}
+	for _, value := range tagResponse.Results[0].Series[0].Values {
+		columns[0] = append(columns[0], fmt.Sprintf("%v", value[0]))
+		columns[1] = append(columns[1], "string")
+		columns[2] = append(columns[2], "tag")
+	}
+	for _, value := range fieldResponse.Results[0].Series[0].Values {
+		columns[0] = append(columns[0], fmt.Sprintf("%v", value[0]))
+		columns[1] = append(columns[1], fmt.Sprintf("%v", value[1]))
+		columns[2] = append(columns[2], "field")
+	}
+
+	latestMeasurementQueryString := fmt.Sprintf("select * from \"%s\" limit 1", measurement)
+	latestMeasurementResponse := queryInflux(latestMeasurementQueryString)
+	latestMeasurements := latestMeasurementResponse.Results[0].Series[0]
+
+	columns[3] = make([]string, len(columns[0]))
+
+	for i, property := range columns[0] {
+		for j, measurementProperty := range latestMeasurements.Columns {
+			if property == measurementProperty {
+				if latestMeasurements.Values[0][j] == nil {
+					columns[3][i] = ""
+				} else if columns[1][i] == "string" {
+						columns[3][i] = fmt.Sprintf("\"%v\"", latestMeasurements.Values[0][j])
+				} else {
+					if latestMeasurements.Values[0][j] == nil {
+						columns[3][i] = fmt.Sprintf("%v", latestMeasurements.Values[0][j])
+					}
+				}
+				break
+			}
+		}
+	}
+
+	return columns, nil
+}
+
+func FetchTimestampOfLatestMeasurement(measurement string) (int64, error) {
+	fieldQueryString := fmt.Sprintf("show field keys from \"%s\"", measurement)
+	fieldResponse := queryInflux(fieldQueryString)
+	
+	// For the request we have to provide at least one field name.
+	// InfluxDb mandates at least one field per measurement, therefore we can be sure that the first value in the fieldResponse is set.
+	firstField := fieldResponse.Results[0].Series[0].Values[0][0]
+	queryString := fmt.Sprintf("select last(\"%s\") from \"%s\"", firstField, measurement)
+	response := queryInflux(queryString)
+
+	timestampString := fmt.Sprintf("%v", response.Results[0].Series[0].Values[0][0])
+	timestampUnix, err := time.Parse("2006-01-02T15:04:05Z", timestampString)
+	if err != nil {
+		log.Printf("%v\n", err)
+	}
+
+	return timestampUnix.Unix(), nil
+}
 
 func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
 	selection := formatSelection(request.Properties)
@@ -93,6 +170,46 @@ func formatRangeFilter(b *strings.Builder, rangeFilter *jagw.RangeFilter) {
 		fmt.Fprintf(b, "%d", *rangeFilter.LatestTimestamp)
 	}
 }
+
+/*
+Response looks something like this:
+
+{
+  "Results": [
+    {
+      "statement_id": 0,
+      "Series": [
+        {
+          "name": "Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface",
+          "columns": [
+            "time",
+            "data_rates/output_data_rate"
+          ],
+          "values": [
+            [
+              "2022-01-13T11:22:06.721Z",
+              1
+            ],
+            [
+              "2022-01-13T11:22:06.727Z",
+              1
+            ],
+            [
+              "2022-01-13T11:22:06.739Z",
+              1
+            ],
+            [
+              "2022-01-13T11:22:06.758Z",
+              53
+            ]
+          ]
+        }
+      ],
+      "Messages": null
+    }
+  ]
+}
+*/
 
 func createJSONArray(response *client.Response) []string {
 	series := response.Results[0].Series[0]

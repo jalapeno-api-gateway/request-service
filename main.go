@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net"
-	"os"
+	// "os"
 
 	"github.com/jalapeno-api-gateway/request-service/helpers"
 	"github.com/jalapeno-api-gateway/request-service/influxdb"
@@ -18,7 +18,8 @@ func main() {
 	redis.InitializeRedisClient()
 	influxdb.InitializeInfluxClient()
 
-	serverAddress := os.Getenv("APP_SERVER_ADDRESS")
+	serverAddress := "0.0.0.0:9000"
+	// serverAddress := os.Getenv("APP_SERVER_ADDRESS")
 	lis, err := net.Listen("tcp", serverAddress)
 	if err != nil {
 		log.Fatalf("Failed to listen on %s: %v", serverAddress, err)

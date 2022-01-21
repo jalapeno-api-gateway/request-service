@@ -120,3 +120,20 @@ func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *ja
 	
 	return &jagw.TelemetryResponse{TelemetryData: telemetryData}, nil
 }
+
+func (s *requestServiceServer) GetMeasurements(ctx context.Context, request *jagw.MeasurementsRequest) (*jagw.MeasurementsResponse, error) {
+	log.Printf("SR-App requesting Measurements\n")
+	
+	measurements := fetchMeasurements()
+	
+	return &jagw.MeasurementsResponse{Measurements: measurements}, nil
+}
+
+func (s *requestServiceServer) GetMeasurementDetails(ctx context.Context, request *jagw.MeasurementDetailsRequest) (*jagw.MeasurementDetailsResponse, error) {
+	log.Printf("SR-App requesting MeasurementDetails\n")
+	
+	columns := fetchMeasurementColumns(*request.Name)
+	latestTimestamp := fetchLatestTimestamp(*request.Name)
+	
+	return &jagw.MeasurementDetailsResponse{TimestampLatestMeasurement: &latestTimestamp, Columns: columns}, nil
+}
