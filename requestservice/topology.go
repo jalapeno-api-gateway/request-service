@@ -4,10 +4,11 @@ import (
 	"github.com/jalapeno-api-gateway/jagw-core/model/property"
 	"github.com/jalapeno-api-gateway/jagw-core/model/topology"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
 
-func convertLsNode(doc interface{}, propertyNames []string) *jagw.LsNode {
+func convertLsNode(logger *logrus.Entry, doc interface{}, propertyNames []string) *jagw.LsNode {
 	document := doc.(topology.LsNode)
 	lsNode := jagw.LsNode{Key: proto.String(document.Key)}
 

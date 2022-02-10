@@ -1,27 +1,34 @@
 package main
 
 import (
-	"log"
 	"net"
-	"os"
 
+	"github.com/jalapeno-api-gateway/jagw-core/logger"
+	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
 	"github.com/jalapeno-api-gateway/request-service/helpers"
 	"github.com/jalapeno-api-gateway/request-service/influxdb"
-	"github.com/jalapeno-api-gateway/request-service/requestservice"
 	"github.com/jalapeno-api-gateway/request-service/redis"
-	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
+	"github.com/jalapeno-api-gateway/request-service/requestservice"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	log.Print("Starting Request Service ...")
+	logger.Init(logrus.StandardLogger(), "debug") // TODO: Pass this default log level through the environment variables through the helm chart
+
+	logrus.Trace("Starting Request Service.")
+
 	redis.InitializeRedisClient()
 	influxdb.InitializeInfluxClient()
 
-	serverAddress := os.Getenv("APP_SERVER_ADDRESS")
+	// serverAddress := os.Getenv("APP_SERVER_ADDRESS")
+	serverAddress := "0.0.0.0:9000"
+	
+	logger := logrus.WithField("serverAddress", serverAddress)
+	logger.Trace("Listening for traffic.")
 	lis, err := net.Listen("tcp", serverAddress)
 	if err != nil {
-		log.Fatalf("Failed to listen on %s: %v", serverAddress, err)
+		logger.WithError(err).Panic("Failed to listen for traffic.")
 	}
 
 	grpcServer := grpc.NewServer()
@@ -32,8 +39,9 @@ func main() {
 		grpcServer.Stop()
 	}()
 
+	logrus.Trace("Serving gRPC server.")
 	jagw.RegisterRequestServiceServer(grpcServer, requestservice.NewServer())
 	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve gRPC server: %v", err)
+		logrus.WithError(err).Panic("Failed to server gRPC server.")
 	}
 }

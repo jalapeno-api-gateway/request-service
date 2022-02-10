@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 	"github.com/jalapeno-api-gateway/jagw-core/model/topology"
+	"github.com/sirupsen/logrus"
 )
 
 func prependCollectionNameToKeys(keys []string, className class.Class) []string {
@@ -26,11 +26,11 @@ func scanAllKeysOfCollection(ctx context.Context, className class.Class) []strin
 	return keys
 }
 
-func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
+func getValuesByKeys(ctx context.Context, logger *logrus.Entry, keys []string) [][]byte {
 	//MGet returns nil for a key which is not present in cache
 	values, err := RedisClient.MGet(ctx, keys...).Result()
 	if err != nil {
-		log.Fatal("Error fetching documents from Redis: ", err)
+		logger.WithError(err).Panic("Failed to fetch documents from Redis.")
 	}
 
 	bytes := [][]byte{}
@@ -43,38 +43,38 @@ func getValuesByKeys(ctx context.Context, keys []string) [][]byte {
 	return bytes
 }
 
-func unmarshalObject(bytes []byte, className class.Class) interface{} {
+func unmarshalObject(logger *logrus.Entry, bytes []byte, className class.Class) interface{} {
 	switch className {
 		case class.LsNode:
 			document := topology.LsNode{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		case class.LsNodeCoordinates:
 			document := topology.LsNodeCoordinates{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		case class.LsLink:
 			document := topology.LsLink{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		case class.LsPrefix:
 			document := topology.LsPrefix{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		case class.LsSrv6Sid:
 			document := topology.LsSrv6Sid{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		case class.LsNodeEdge:
 			document := topology.LsNodeEdge{}
-			handleUnmarshallingError(json.Unmarshal(bytes, &document))
+			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
 			return document
 		default: return nil
 	}
 }
 
-func handleUnmarshallingError(err error) {
+func handleUnmarshallingError(logger *logrus.Entry, err error) {
 	if err != nil {
-		log.Fatal("Error while unmarshalling object: ", err)
+		logger.WithError(err).Panic("Failed to unmarshall object.")
 	}
 }

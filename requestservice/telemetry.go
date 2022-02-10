@@ -1,16 +1,12 @@
 package requestservice
 
 import (
-	"log"
-
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
 	"github.com/jalapeno-api-gateway/request-service/influxdb"
+	"github.com/sirupsen/logrus"
 )
 
-func fetchTelemetryData(request *jagw.TelemetryRequest) []string {
-	jsonArray, err := influxdb.Fetch(request)
-	if err != nil {
-		log.Printf("%v\n", err)
-	} 
+func fetchTelemetryData(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
+	jsonArray := influxdb.Fetch(logger, request)
 	return jsonArray
 }

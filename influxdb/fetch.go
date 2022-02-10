@@ -1,14 +1,13 @@
 package influxdb
 
 import (
-	"errors"
 	"fmt"
-	"log"
 	"strings"
 
+	"github.com/iancoleman/strcase"
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
-	"github.com/iancoleman/strcase"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -21,7 +20,7 @@ const (
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
 
-func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
+func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 	selection := formatSelection(request.Properties)
 	filters := formatFilters(request)
 	queryString := fmt.Sprintf("select %s FROM \"%s\" WHERE %s", selection, *request.SensorPath, filters)
@@ -29,10 +28,10 @@ func Fetch(request *jagw.TelemetryRequest) ([]string, error) {
 	response := queryInflux(queryString)
 
 	if len(response.Results[0].Series) == 0 {
-		return []string{}, errors.New("error 1")
+		return []string{}
 	}
 
-	return createJSONArray(response), nil
+	return createJSONArray(response)
 }
 
 func formatSelection(properties []string) string {
@@ -131,7 +130,6 @@ func createSingleJSON(formattedPropertyNames []string, values []interface{}) str
 	}
 	
 	trimmed := removeTrailingCharacters(b.String(), 2) // Remove trailing ", "
-	log.Printf("%v}\n", trimmed)
 	return trimmed + "}"
 }
 
