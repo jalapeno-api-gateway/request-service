@@ -3,20 +3,22 @@ package requestservice
 import (
 	"context"
 
+	"github.com/jalapeno-api-gateway/jagw-core/jagwerror"
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 	"github.com/jalapeno-api-gateway/request-service/redis"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/peer"
 )
 
-func fetchDocuments(ctx context.Context, logger *logrus.Entry, keys []string, className class.Class) []interface{} {
+func fetchDocuments(ctx context.Context, logger *logrus.Entry, keys []string, className class.Class) ([]interface{}, *jagwerror.Error) {
 	var documents []interface{}
+	var keysNotFoundError *jagwerror.Error
 	if len(keys) == 0 {
-		documents = redis.FetchAll(ctx, logger, className)
+		documents, keysNotFoundError  = redis.FetchAll(ctx, logger, className)
 	} else {
-		documents = redis.Fetch(ctx, logger, keys, className)
+		documents, keysNotFoundError = redis.Fetch(ctx, logger, keys, className)
 	}
-	return documents
+	return documents, keysNotFoundError
 }
 
 func getClientIp(ctx context.Context) string {

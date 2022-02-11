@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/jalapeno-api-gateway/jagw-core/jagwerror"
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 	"github.com/jalapeno-api-gateway/jagw-core/model/topology"
 	"github.com/sirupsen/logrus"
@@ -26,21 +27,24 @@ func scanAllKeysOfCollection(ctx context.Context, className class.Class) []strin
 	return keys
 }
 
-func getValuesByKeys(ctx context.Context, logger *logrus.Entry, keys []string) [][]byte {
+func getValuesByKeys(ctx context.Context, logger *logrus.Entry, keys []string) ([][]byte, *jagwerror.Error) {
 	//MGet returns nil for a key which is not present in cache
 	values, err := RedisClient.MGet(ctx, keys...).Result()
 	if err != nil {
 		logger.WithError(err).Panic("Failed to fetch documents from Redis.")
 	}
 
+	keysNotFound := []string{}
 	bytes := [][]byte{}
-	for _, value := range values {
+	for i, value := range values {
 		if value != nil { //entry found in cache
 			bytes = append(bytes, []byte(value.(string)))
+		} else {
+			keysNotFound = append(keysNotFound, keys[i])
 		}
 	}
-
-	return bytes
+	
+	return bytes, jagwerror.CreateErrorForKeysNotFound(keysNotFound)
 }
 
 func unmarshalObject(logger *logrus.Entry, bytes []byte, className class.Class) interface{} {

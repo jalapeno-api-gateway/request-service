@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jalapeno-api-gateway/jagw-core/jagwerror"
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
 	"github.com/sirupsen/logrus"
@@ -22,7 +23,7 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetLsNodes"})
 	logger.Debug("Incoming request.")
 
-	documents := fetchDocuments(ctx, logger, request.Keys, class.LsNode)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, request.Keys, class.LsNode)
 
 	logger.Debug("Preparing response.")
 	response := &jagw.LsNodeResponse{}
@@ -33,7 +34,7 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 	}
 	
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request *jagw.LsNodeCoordinatesRequest) (*jagw.LsNodeCoordinatesResponse, error) {
@@ -46,7 +47,7 @@ func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request
 		documentKeys = append(documentKeys, fmt.Sprintf("%s_Coordinates", lsNodeKey))
 	}
 	
-	documents := fetchDocuments(ctx, logger, documentKeys, class.LsNodeCoordinates)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, documentKeys, class.LsNodeCoordinates)
 	
 	logger.Debug("Preparing response.")
 	response := &jagw.LsNodeCoordinatesResponse{}
@@ -57,14 +58,14 @@ func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request
 	}
 	
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsLinkResponse, error) {
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetLsLinks"})
 	logger.Debug("Incoming request.")
 
-	documents := fetchDocuments(ctx, logger, request.Keys, class.LsLink)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, request.Keys, class.LsLink)
 
 	logger.Debug("Preparing response.")
 	response := &jagw.LsLinkResponse{}
@@ -75,14 +76,14 @@ func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.Top
 	}
 	
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsPrefixResponse, error) {
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetLsPrefixes"})
 	logger.Debug("Incoming request.")
 
-	documents := fetchDocuments(ctx, logger, request.Keys, class.LsPrefix)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, request.Keys, class.LsPrefix)
 
 	logger.Debug("Preparing response.")
 	response := &jagw.LsPrefixResponse{}
@@ -93,14 +94,14 @@ func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.
 	}
 	
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsSrv6SidResponse, error) {
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetLsSrv6Sids"})
 	logger.Debug("Incoming request.")
 
-	documents := fetchDocuments(ctx, logger, request.Keys, class.LsSrv6Sid)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, request.Keys, class.LsSrv6Sid)
 
 	logger.Debug("Preparing response.")
 	response := &jagw.LsSrv6SidResponse{}
@@ -111,14 +112,14 @@ func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.
 	}
 	
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw.TopologyRequest) (*jagw.LsNodeEdgeResponse, error) {
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetLsNodeEdges"})
 	logger.Debug("Incoming request.")
 
-	documents := fetchDocuments(ctx, logger, request.Keys, class.LsNodeEdge)
+	documents, keysNotFoundError := fetchDocuments(ctx, logger, request.Keys, class.LsNodeEdge)
 
 	logger.Debug("Preparing response.")
 	response := &jagw.LsNodeEdgeResponse{}
@@ -129,7 +130,7 @@ func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw
 	}
 
 	logger.Debug("Sending response.")
-	return response, nil
+	return response, jagwerror.GetGrpcError(keysNotFoundError)
 }
 
 func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *jagw.TelemetryRequest) (*jagw.TelemetryResponse, error) {
