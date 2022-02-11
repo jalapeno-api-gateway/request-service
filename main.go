@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"os"
 
 	"github.com/jalapeno-api-gateway/jagw-core/logger"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
@@ -21,8 +22,7 @@ func main() {
 	redis.InitializeRedisClient()
 	influxdb.InitializeInfluxClient()
 
-	// serverAddress := os.Getenv("APP_SERVER_ADDRESS")
-	serverAddress := "0.0.0.0:9000"
+	serverAddress := os.Getenv("APP_SERVER_ADDRESS")
 	
 	logger := logrus.WithField("serverAddress", serverAddress)
 	logger.Trace("Listening for traffic.")
