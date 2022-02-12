@@ -6,7 +6,6 @@ import (
 
 	influx "github.com/influxdata/influxdb1-client/v2"
 	"github.com/sirupsen/logrus"
-	// "github.com/jalapeno-api-gateway/jagw-core/logging"
 )
 
 var InfluxClient *influx.Client

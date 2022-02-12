@@ -20,7 +20,7 @@ func Fetch(ctx context.Context, logger *logrus.Entry, keys []string, className c
 
 func FetchAll(ctx context.Context, logger *logrus.Entry, className class.Class) ([]interface{}, *jagwerror.Error) {
 	var documents []interface{}
-	keys := scanAllKeysOfCollection(ctx, className)
+	keys := scanAllKeysOfCollection(ctx, logger, className)
 	values, keysNotFoundError := getValuesByKeys(ctx, logger, keys)
 	for _, value := range values {
 		documents = append(documents, unmarshalObject(logger, value, className))

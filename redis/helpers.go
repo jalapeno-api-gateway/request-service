@@ -18,12 +18,18 @@ func prependCollectionNameToKeys(keys []string, className class.Class) []string 
 	return keys
 }
 
-func scanAllKeysOfCollection(ctx context.Context, className class.Class) []string {
+func scanAllKeysOfCollection(ctx context.Context, logger *logrus.Entry, className class.Class) []string {
+	keysMustMatchString := fmt.Sprintf("%s/*", className)
+	logger = logger.WithFields(logrus.Fields{"keysMustMatchString": keysMustMatchString, "collection": className})
+	logger.Trace("Scanning Redis for all keys of collection.")
+
 	iter := RedisClient.Scan(ctx, 0, fmt.Sprintf("%s/*", className), 0).Iterator()
 	keys := []string{}
 	for iter.Next(ctx) {
 		keys = append(keys, iter.Val())
 	}
+
+	logger.WithField("numberOfKeysFound", len(keys)).Trace("Done scanning Redis for keys.")
 	return keys
 }
 

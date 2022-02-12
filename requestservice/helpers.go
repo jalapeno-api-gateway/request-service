@@ -14,6 +14,7 @@ func fetchDocuments(ctx context.Context, logger *logrus.Entry, keys []string, cl
 	var documents []interface{}
 	var keysNotFoundError *jagwerror.Error
 	if len(keys) == 0 {
+		logger.Trace("No keys provided, fetching all documents.")
 		documents, keysNotFoundError  = redis.FetchAll(ctx, logger, className)
 	} else {
 		documents, keysNotFoundError = redis.Fetch(ctx, logger, keys, className)
