@@ -13,10 +13,7 @@ func fetchTelemetryData(logger *logrus.Entry, request *jagw.TelemetryRequest) []
 }
 
 func fetchMeasurements(logger *logrus.Entry) []*jagw.Measurement {
-	measurementNames, err := influxdb.FetchMeasurements()
-	if err != nil {
-		logger.WithError(err).Panic("Failed to fetch measurements.")
-	}
+	measurementNames := influxdb.FetchMeasurements()
 
 	measurements := []*jagw.Measurement{}
 	for _, name := range measurementNames {
@@ -31,10 +28,7 @@ func fetchMeasurements(logger *logrus.Entry) []*jagw.Measurement {
 }
 
 func fetchMeasurementColumns(logger *logrus.Entry, measurement string) []*jagw.MeasurementColumn {
-	columns, err := influxdb.FetchColumns(measurement)
-	if err != nil {
-		logger.WithField("measurement", measurement).WithError(err).Panic("Failed to fetch measurement columns.")
-	}
+	columns := influxdb.FetchColumns(measurement)
 
 	measurementcolumns := []*jagw.MeasurementColumn{}
 	for i := 0; i < len(columns[0]); i++ {

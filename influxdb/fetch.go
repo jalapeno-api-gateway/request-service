@@ -21,7 +21,7 @@ const (
 	LastStateTransitionTimeIdentifier = "last_state_transition_time"
 )
 
-func FetchMeasurements() ([]string, error) {
+func FetchMeasurements() []string {
 	queryString := "show measurements"
 	response := queryInflux(queryString)
 
@@ -30,10 +30,10 @@ func FetchMeasurements() ([]string, error) {
 		measurements = append(measurements, fmt.Sprintf("%v", value[0]))
 	}
 
-	return measurements, nil
+	return measurements
 }
 
-func FetchColumns(measurement string) ([][]string, error) {
+func FetchColumns(measurement string) [][]string {
 	tagQueryString := fmt.Sprintf("show tag keys from \"%s\"", measurement)
 	fieldQueryString := fmt.Sprintf("show field keys from \"%s\"", measurement)
 
@@ -75,7 +75,7 @@ func FetchColumns(measurement string) ([][]string, error) {
 		}
 	}
 
-	return columns, nil
+	return columns
 }
 
 func FetchTimestampOfLatestMeasurement(logger *logrus.Entry, measurement string) int64 {

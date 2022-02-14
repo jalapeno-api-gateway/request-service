@@ -23,7 +23,6 @@ func InitializeInfluxClient() {
 		Password: influxPassword,
 	})
 	if err != nil {
-		// TODO: Inform SR-App about unavailable
 		logrus.WithError(err).Panic("Failed to create InfluxDB client.")
 	}
 	InfluxClient = &client
