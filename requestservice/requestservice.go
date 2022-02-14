@@ -143,3 +143,26 @@ func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *ja
 	logger.Debug("Sending response.")
 	return response, nil
 }
+
+func (s *requestServiceServer) GetMeasurements(ctx context.Context, request *jagw.MeasurementsRequest) (*jagw.MeasurementsResponse, error) {
+	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetMeasurements"})
+	logger.Debug("Incoming request.")
+
+	logger.Debug("Preparing response.")
+	measurements := fetchMeasurements(logger)
+
+	logger.Debug("Sending response.")
+	return &jagw.MeasurementsResponse{Measurements: measurements}, nil
+}
+
+func (s *requestServiceServer) GetMeasurementDetails(ctx context.Context, request *jagw.MeasurementDetailsRequest) (*jagw.MeasurementDetailsResponse, error) {
+	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetMeasurementDetails"})
+	logger.Debug("Incoming request.")
+
+	logger.Debug("Preparing response.")
+	columns := fetchMeasurementColumns(logger, *request.Name)
+	latestTimestamp := fetchLatestTimestamp(logger, *request.Name)
+
+	logger.Debug("Sending response.")
+	return &jagw.MeasurementDetailsResponse{TimestampLatestMeasurement: &latestTimestamp, Columns: columns}, nil
+} 
