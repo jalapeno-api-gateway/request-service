@@ -12,14 +12,14 @@ import (
 
 func fetchDocuments(ctx context.Context, logger *logrus.Entry, keys []string, className class.Class) ([]interface{}, *jagwerror.Error) {
 	var documents []interface{}
-	var keysNotFoundError *jagwerror.Error
+	var jagwError *jagwerror.Error
 	if len(keys) == 0 {
 		logger.Trace("No keys provided, fetching all documents.")
-		documents, keysNotFoundError  = redis.FetchAll(ctx, logger, className)
+		documents, jagwError  = redis.FetchAll(ctx, logger, className)
 	} else {
-		documents, keysNotFoundError = redis.Fetch(ctx, logger, keys, className)
+		documents, jagwError = redis.Fetch(ctx, logger, keys, className)
 	}
-	return documents, keysNotFoundError
+	return documents, jagwError
 }
 
 func getClientIp(ctx context.Context) string {

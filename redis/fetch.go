@@ -11,19 +11,19 @@ import (
 func Fetch(ctx context.Context, logger *logrus.Entry, keys []string, className class.Class) ([]interface{}, *jagwerror.Error) {
 	keys = prependCollectionNameToKeys(keys, className)
 	var documents []interface{}
-	values, keysNotFoundError := getValuesByKeys(ctx, logger, keys)
+	values, jagwErr := getValuesByKeys(ctx, logger, keys)
 	for _, value := range values {
 		documents = append(documents, unmarshalObject(logger, value, className))
 	}
-	return documents, keysNotFoundError
+	return documents, jagwErr
 }
 
 func FetchAll(ctx context.Context, logger *logrus.Entry, className class.Class) ([]interface{}, *jagwerror.Error) {
 	var documents []interface{}
 	keys := scanAllKeysOfCollection(ctx, logger, className)
-	values, keysNotFoundError := getValuesByKeys(ctx, logger, keys)
+	values, jagwErr := getValuesByKeys(ctx, logger, keys)
 	for _, value := range values {
 		documents = append(documents, unmarshalObject(logger, value, className))
 	}
-	return documents, keysNotFoundError
+	return documents, jagwErr
 }

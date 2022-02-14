@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/jalapeno-api-gateway/jagw-core/jagwerror"
 	"github.com/jalapeno-api-gateway/jagw-core/model/class"
@@ -50,7 +51,17 @@ func getValuesByKeys(ctx context.Context, logger *logrus.Entry, keys []string) (
 		}
 	}
 	
-	return bytes, jagwerror.CreateErrorForKeysNotFound(keysNotFound)
+	return bytes, createErrorForKeysNotFound(keysNotFound)
+}
+
+func createErrorForKeysNotFound(keysNotFound []string) *jagwerror.Error {
+	if len(keysNotFound) == 0 {
+		return nil
+	}
+
+	keysString := strings.Join(keysNotFound, ", ")
+	message := "Unable to find the following keys: " + keysString
+	return &jagwerror.Error{ErrorCode: jagwerror.NOT_FOUND, Message: message}
 }
 
 func unmarshalObject(logger *logrus.Entry, bytes []byte, className class.Class) interface{} {
