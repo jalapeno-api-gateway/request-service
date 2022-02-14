@@ -70,6 +70,8 @@ github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab h1:HqW
 github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab/go.mod h1:qj24IKcXYK6Iy9ceXlo3Tc+vtHo9lIhSX5JddghvEPo=
 github.com/jalapeno-api-gateway/jagw-core v1.2.1-0.20220214100110-b0ab8f40f425 h1:6m02VKxQlVI1yPhgN/8B4wvEFGeic30o1tyr7mfOz1E=
 github.com/jalapeno-api-gateway/jagw-core v1.2.1-0.20220214100110-b0ab8f40f425/go.mod h1:9v9WWID6VvWWVnOAivyOD4Gt/iBbspyFgdaOmDXeDk4=
+github.com/jalapeno-api-gateway/jagw-core v1.2.1-0.20220214105825-1491052b638c h1:1CJoH+yy2adeqzJqOMu92nCrQXKo60lUKCPtmHptc6Q=
+github.com/jalapeno-api-gateway/jagw-core v1.2.1-0.20220214105825-1491052b638c/go.mod h1:9v9WWID6VvWWVnOAivyOD4Gt/iBbspyFgdaOmDXeDk4=
 github.com/jalapeno-api-gateway/protorepo-jagw-go v1.2.1-0.20220201105549-2d90a4a7bd65 h1:4nxY15ereCOFa7kUKnm6xY4jod1Gw70Fhf5bOWb2XTI=
 github.com/jalapeno-api-gateway/protorepo-jagw-go v1.2.1-0.20220201105549-2d90a4a7bd65/go.mod h1:gGhrSpNUJZWtHZt1qinfZUBLxRcym0W7Ape9oc9jvzw=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
