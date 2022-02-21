@@ -29,10 +29,12 @@ func InitializeInfluxClient() {
 }
 
 func queryInflux(queryString string) *influx.Response {
-	logger := logrus.WithField("queryString", queryString)
+	databaseName := os.Getenv("INFLUX_DB")
+
+	logger := logrus.WithFields(logrus.Fields{"databaseName": databaseName, "queryString": queryString})
 	logger.Debug("Querying InfluxDB.")
 
-	query := influx.NewQuery(queryString, os.Getenv("INFLUX_DB"), "")
+	query := influx.NewQuery(queryString, databaseName, "")
 	response, err := (*InfluxClient).Query(query)
 
 	if err != nil {
