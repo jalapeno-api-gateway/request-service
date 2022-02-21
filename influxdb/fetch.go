@@ -141,7 +141,12 @@ func formatFilters(request *jagw.TelemetryRequest) string {
 	if request.RangeFilter == nil {
 		return b.String() + " limit 1"
 	} else {
-		formatRangeFilter(&b, request.RangeFilter)
+		if len(request.StringFilters) > 0 {
+			formatRangeFilter(" AND ", &b, request.RangeFilter)
+			} else {
+			formatRangeFilter(" ", &b, request.RangeFilter)
+
+		}
 		return b.String()
 	}
 }
@@ -167,7 +172,8 @@ func formatStringFilters(prefix string, b *strings.Builder, stringFilters []*jag
 	formatStringFilters(" AND ", b, stringFilters, index + 1)
 }
 
-func formatRangeFilter(b *strings.Builder, rangeFilter *jagw.RangeFilter) {
+func formatRangeFilter(prefix string, b *strings.Builder, rangeFilter *jagw.RangeFilter) {
+	b.WriteString(prefix)
 	b.WriteString("time >= ")
 	fmt.Fprintf(b, "%d", *rangeFilter.EarliestTimestamp)
 	b.WriteString(" AND ")
