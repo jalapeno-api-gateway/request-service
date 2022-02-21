@@ -1,13 +1,14 @@
 package influxdb
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
-	"github.com/iancoleman/strcase"
 	client "github.com/influxdata/influxdb1-client/v2"
 	"github.com/jalapeno-api-gateway/protorepo-jagw-go/jagw"
+	"github.com/nqd/flat"
 	"github.com/sirupsen/logrus"
 )
 
@@ -108,7 +109,7 @@ func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 		return []string{}
 	}
 
-	return createJSONArray(response)
+	return createJsonArray(response, *request.Unflatten)
 }
 
 func formatSelection(properties []string) string {
@@ -179,7 +180,7 @@ func formatRangeFilter(b *strings.Builder, rangeFilter *jagw.RangeFilter) {
 }
 
 /*
-Response looks something like this:
+Response from InfluxDb looks something like this:
 {
   "Results": [
     {
@@ -216,70 +217,60 @@ Response looks something like this:
   ]
 }
 */
-func createJSONArray(response *client.Response) []string {
+func createJsonArray(response *client.Response, unflatten bool) []string {
 	series := response.Results[0].Series[0]
 
-	formattedPropertyNames := make([]string, len(series.Columns))
-	for i, property := range series.Columns {
-		formattedPropertyNames[i] = formatPropertyName(property)
+	jsonMeasurements := make([]string, len(series.Values))
+	for i := 0; i < len(jsonMeasurements); i++ {
+		jsonMeasurements[i] = createSingleJson(series.Columns, series.Values[i], unflatten)
 	}
 
-	jsonArray := make([]string, len(series.Values))
-	for i := 0; i < len(jsonArray); i++ {
-		jsonArray[i] = createSingleJSON(formattedPropertyNames, series.Values[i])
-	}
-
-	return jsonArray
+	return jsonMeasurements
 }
 
-func createSingleJSON(formattedPropertyNames []string, values []interface{}) string {
-	var b strings.Builder
-	b.WriteString("{")
-	
-	for i := 0; i < len(formattedPropertyNames); i++ {		
-		if values[i] != nil {
-			b.WriteString("\"")
-			b.WriteString(formattedPropertyNames[i])
-			b.WriteString("\"")
-			b.WriteString(": ")
-			switch values[i].(type) {
-				case string: fmt.Fprintf(&b, "\"%v\"", values[i])
-				default: fmt.Fprintf(&b, "%v", values[i])
-			}
-			b.WriteString(", ")
-		} else {
-			// TODO Handle case "No value for this property"
-		}
+func createSingleJson(propertyNames []string, values []interface{}, unflatten bool) string {
+	m := make(map[string]interface{}, len(propertyNames))
+	for i := 0; i < len(propertyNames); i++ {
+		m[propertyNames[i]] = values[i]
 	}
-	
-	trimmed := removeTrailingCharacters(b.String(), 2) // Remove trailing ", "
-	return trimmed + "}"
-}
 
-func removeTrailingCharacters(s string, numberOfCharacters int) string {
-	if len(s) > 0 {
-		s = s[:len(s) - numberOfCharacters]
+	if unflatten {
+		m = Unflatten(m)
 	}
-	return s
+
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		logrus.WithError(err).Panic("Failed to marshal map.")
+	}
+
+	return string(bytes)
 }
 
 /*
-Converts a string in the format of:
-   "data_rates/output_data_rate"
-to:
-   "DataRates_OutputDataRate"
-*/
-func formatPropertyName(propertyName string) string {
-	names := strings.Split(propertyName, "/")
-	var b strings.Builder
-	
-	lastIndex := len(names) -1
-	for i, name := range names {
-		b.WriteString(strcase.ToCamel(name))
-		if i < lastIndex {
-			b.WriteString("_")
-		}
+Unflatten converts this...
+
+	map[string]interface{}{
+		"foo_foo/bar_bar": "t",
+		"foo_foo/boo_bii": 17
+		"foo_fii": 456,
 	}
 
-	return b.String()
+to this...
+
+	map[string]interface{}{
+	    "foo_foo": map[string]interface{}{
+	        "bar_bar": "t",
+			"boo_bii": 17
+	    },
+	        "foo_fii": 456,
+	    },
+	}
+
+*/
+func Unflatten(m map[string]interface{}) map[string]interface{} {
+	out, err := flat.Unflatten(m, &flat.Options{Delimiter: "/"})
+	if err != nil {
+		logrus.WithError(err).Panic("Failed to unflatten map.")
+	}
+	return out
 }
