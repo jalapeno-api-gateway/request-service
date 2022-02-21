@@ -100,7 +100,7 @@ func FetchTimestampOfLatestMeasurement(logger *logrus.Entry, measurement string)
 func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 	selection := formatSelection(request.Properties)
 	filters := formatFilters(request)
-	queryString := fmt.Sprintf("select %s FROM \"%s\" WHERE %s", selection, *request.SensorPath, filters)
+	queryString := fmt.Sprintf("select %s FROM \"%s\" %s", selection, *request.SensorPath, filters)
 
 	response := queryInflux(queryString)
 
@@ -131,31 +131,39 @@ func formatSelection(properties []string) string {
 
 func formatFilters(request *jagw.TelemetryRequest) string {
 	var b strings.Builder
-	formatStringFilters(&b, request.StringFilters)
+
+	if len(request.StringFilters) > 0 {
+		formatStringFilters("WHERE ", &b, request.StringFilters, 0)
+	}
+	
 	
 	if request.RangeFilter == nil {
-		trimmed := removeTrailingCharacters(b.String(), 5) // remove trailing instance of " AND "
-		return trimmed + " limit 1"
+		return b.String() + " limit 1"
 	} else {
 		formatRangeFilter(&b, request.RangeFilter)
 		return b.String()
 	}
 }
 
-func formatStringFilters(b *strings.Builder, stringFilters []*jagw.StringFilter) {
-	for _, stringFilter := range stringFilters {
-		b.WriteString("\"")
-		b.WriteString(*stringFilter.Property)
-		b.WriteString("\"")
-		switch *stringFilter.Operator {
-			case jagw.StringOperator_EQUAL: b.WriteString(" = ")
-			case jagw.StringOperator_NOT_EQUAL: b.WriteString(" != ")
-		}
-		b.WriteString("'")
-		b.WriteString(*stringFilter.Value)
-		b.WriteString("'")
-		b.WriteString(" AND ")
+func formatStringFilters(prefix string, b *strings.Builder, stringFilters []*jagw.StringFilter, index int) {
+	if index >= len(stringFilters) {
+		return
 	}
+
+	b.WriteString(prefix)
+
+	b.WriteString("\"")
+	b.WriteString(*stringFilters[index].Property)
+	b.WriteString("\"")
+	switch *stringFilters[index].Operator {
+		case jagw.StringOperator_EQUAL: b.WriteString(" = ")
+		case jagw.StringOperator_NOT_EQUAL: b.WriteString(" != ")
+	}
+	b.WriteString("'")
+	b.WriteString(*stringFilters[index].Value)
+	b.WriteString("'")
+
+	formatStringFilters(" AND ", b, stringFilters, index + 1)
 }
 
 func formatRangeFilter(b *strings.Builder, rangeFilter *jagw.RangeFilter) {
