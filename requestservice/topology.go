@@ -8,15 +8,15 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func convertLsNode(logger *logrus.Entry, doc interface{}, propertyNames []string) *jagw.LsNode {
+func convertLsNode(logger *logrus.Entry, doc interface{}, properties []string) *jagw.LsNode {
 	document := doc.(topology.LsNode)
 	lsNode := jagw.LsNode{Key: proto.String(document.Key)}
 
-	if len(propertyNames) == 0 {
-		propertyNames = property.AllLsNodeProperties
+	if len(properties) == 0 {
+		properties = property.AllLsNodeProperties
 	}
 
-	for _, propertyName := range propertyNames {
+	for _, propertyName := range properties {
 		switch propertyName {
 			case property.Key: lsNode.Key = proto.String(document.Key)
 			case property.Id: lsNode.Id = proto.String(document.Id)
@@ -52,15 +52,15 @@ func convertLsNodeCoordinates(doc interface{}) *jagw.LsNodeCoordinates {
 	}
 }
 
-func convertLsLink(doc interface{}, propertyNames []string) *jagw.LsLink {
+func convertLsLink(doc interface{}, properties []string) *jagw.LsLink {
 	document := doc.(topology.LsLink)
 	lsLink := jagw.LsLink{Key: proto.String(document.Key)}
 
-	if len(propertyNames) == 0 {
-		propertyNames = property.AllLsLinkProperties
+	if len(properties) == 0 {
+		properties = property.AllLsLinkProperties
 	}
 
-	for _, propertyName := range propertyNames {
+	for _, propertyName := range properties {
 		switch propertyName {
 			case property.Key: lsLink.Key = proto.String(document.Key)
 			case property.Id: lsLink.Id = proto.String(document.Id)
@@ -88,15 +88,15 @@ func convertLsLink(doc interface{}, propertyNames []string) *jagw.LsLink {
 	return &lsLink
 }
 
-func convertLsPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
+func convertLsPrefix(doc interface{}, properties []string) *jagw.LsPrefix {
 	document := doc.(topology.LsPrefix)
 	lsPrefix := jagw.LsPrefix{Key: proto.String(document.Key)}
 
-	if len(propertyNames) == 0 {
-		propertyNames = property.AllLsPrefixProperties
+	if len(properties) == 0 {
+		properties = property.AllLsPrefixProperties
 	}
 
-	for _, propertyName := range propertyNames {
+	for _, propertyName := range properties {
 		switch propertyName {
 			case property.Key: lsPrefix.Key = proto.String(document.Key)
 			case property.Id: lsPrefix.Id = proto.String(document.Id)
@@ -124,15 +124,15 @@ func convertLsPrefix(doc interface{}, propertyNames []string) *jagw.LsPrefix {
 	return &lsPrefix
 }
 
-func convertLsSrv6Sid(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
+func convertLsSrv6Sid(doc interface{}, properties []string) *jagw.LsSrv6Sid {
 	document := doc.(topology.LsSrv6Sid)
 	lsSRv6SID := jagw.LsSrv6Sid{Key: proto.String(document.Key)}
 
-	if len(propertyNames) == 0 {
-		propertyNames = property.AllLsSrv6SidProperties
+	if len(properties) == 0 {
+		properties = property.AllLsSrv6SidProperties
 	}
 
-	for _, propertyName := range propertyNames {
+	for _, propertyName := range properties {
 		switch propertyName {
 			case property.Key: lsSRv6SID.Key = proto.String(document.Key)
 			case property.Id: lsSRv6SID.Id = proto.String(document.Id)
@@ -159,15 +159,15 @@ func convertLsSrv6Sid(doc interface{}, propertyNames []string) *jagw.LsSrv6Sid {
 	return &lsSRv6SID
 }
 
-func convertLsNodeEdge(doc interface{}, propertyNames []string) *jagw.LsNodeEdge {
+func convertLsNodeEdge(doc interface{}, properties []string) *jagw.LsNodeEdge {
 	document := doc.(topology.LsNodeEdge)
 	lsNodeEdge := jagw.LsNodeEdge{Key: proto.String(document.Key)}
 
-	if len(propertyNames) == 0 {
-		propertyNames = property.AllLsNodeEdgeProperties
+	if len(properties) == 0 {
+		properties = property.AllLsNodeEdgeProperties
 	}
 
-	for _, propertyName := range propertyNames {
+	for _, propertyName := range properties {
 		switch propertyName {
 			case property.Key: lsNodeEdge.Key = proto.String(document.Key)
 			case property.Id: lsNodeEdge.Id = proto.String(document.Id)
