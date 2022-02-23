@@ -72,6 +72,10 @@ github.com/jalapeno-api-gateway/jagw-core v1.3.0-beta h1:BZ/VfW3XCiD8dVQcYUsMQDe
 github.com/jalapeno-api-gateway/jagw-core v1.3.0-beta/go.mod h1:DiTlxYQ4hCzuORNIyDtLYHYyFys5kBIHUaFAvuUVKvE=
 github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220222092136-aa02f5c9d54d h1:DJQHceIhtNfxBBHbbPHOxdu2izstRDiUcpXqFT8LgsY=
 github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220222092136-aa02f5c9d54d/go.mod h1:gGhrSpNUJZWtHZt1qinfZUBLxRcym0W7Ape9oc9jvzw=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220223172047-7964e9f875ce h1:6aVLr0vHHm1j7vT1k4RkZ3PoIaORPS5Ea4wq9iquRHA=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220223172047-7964e9f875ce/go.mod h1:gGhrSpNUJZWtHZt1qinfZUBLxRcym0W7Ape9oc9jvzw=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v1.3.0-beta h1:S8bhXWSOJVIXYoW6PJeziUIzfP1sC4rXmPCjN8K8Fp8=
+github.com/jalapeno-api-gateway/protorepo-jagw-go v1.3.0-beta/go.mod h1:gGhrSpNUJZWtHZt1qinfZUBLxRcym0W7Ape9oc9jvzw=
 github.com/nqd/flat v0.1.1 h1:sKa3CZipbb7WYD9tORSJD6Ylm/00f6D9Wse7+UkSa+4=
 github.com/nqd/flat v0.1.1/go.mod h1:FOuslZmNY082wVfVUUb7qAGWKl8z8Nor9FMg+Xj2Nss=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=

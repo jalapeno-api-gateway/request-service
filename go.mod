@@ -6,7 +6,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.2
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
 	github.com/jalapeno-api-gateway/jagw-core v1.3.0-beta
-	github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220222092136-aa02f5c9d54d
+	github.com/jalapeno-api-gateway/protorepo-jagw-go v0.0.0-20220223172047-7964e9f875ce
 	github.com/nqd/flat v0.1.1
 	github.com/sirupsen/logrus v1.8.1
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect

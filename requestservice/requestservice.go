@@ -29,7 +29,7 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 	response := &jagw.LsNodeResponse{}
 
 	for _, document := range documents {
-		lsNode := convertLsNode(logger, document, request.PropertyNames)
+		lsNode := convertLsNode(logger, document, request.Properties)
 		response.LsNodes = append(response.LsNodes, lsNode)
 	}
 	
@@ -71,7 +71,7 @@ func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.Top
 	response := &jagw.LsLinkResponse{}
 
 	for _, document := range documents {
-		lsLink := convertLsLink(document, request.PropertyNames)
+		lsLink := convertLsLink(document, request.Properties)
 		response.LsLinks = append(response.LsLinks, lsLink)
 	}
 	
@@ -89,7 +89,7 @@ func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.
 	response := &jagw.LsPrefixResponse{}
 
 	for _, document := range documents {
-		lsPrefix := convertLsPrefix(document, request.PropertyNames)
+		lsPrefix := convertLsPrefix(document, request.Properties)
 		response.LsPrefixes = append(response.LsPrefixes, lsPrefix)
 	}
 	
@@ -107,7 +107,7 @@ func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.
 	response := &jagw.LsSrv6SidResponse{}
 
 	for _, document := range documents {
-		lsSRv6SID := convertLsSrv6Sid(document, request.PropertyNames)
+		lsSRv6SID := convertLsSrv6Sid(document, request.Properties)
 		response.LsSrv6Sids = append(response.LsSrv6Sids, lsSRv6SID)
 	}
 	
@@ -125,7 +125,7 @@ func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw
 	response := &jagw.LsNodeEdgeResponse{}
 
 	for _, document := range documents {
-		lsNodeEdge := convertLsNodeEdge(document, request.PropertyNames)
+		lsNodeEdge := convertLsNodeEdge(document, request.Properties)
 		response.LsNodeEdges = append(response.LsNodeEdges, lsNodeEdge)
 	}
 
