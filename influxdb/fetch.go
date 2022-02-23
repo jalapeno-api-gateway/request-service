@@ -109,7 +109,7 @@ func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 		return []string{}
 	}
 
-	return createJsonArray(response, *request.Unflatten)
+	return createJsonArray(response, request.Unflatten)
 }
 
 func formatSelection(properties []string) string {
@@ -223,7 +223,7 @@ Response from InfluxDb looks something like this:
   ]
 }
 */
-func createJsonArray(response *client.Response, unflatten bool) []string {
+func createJsonArray(response *client.Response, unflatten *bool) []string {
 	series := response.Results[0].Series[0]
 
 	jsonMeasurements := make([]string, len(series.Values))
@@ -234,13 +234,13 @@ func createJsonArray(response *client.Response, unflatten bool) []string {
 	return jsonMeasurements
 }
 
-func createSingleJson(propertyNames []string, values []interface{}, unflatten bool) string {
+func createSingleJson(propertyNames []string, values []interface{}, unflatten *bool) string {
 	m := make(map[string]interface{}, len(propertyNames))
 	for i := 0; i < len(propertyNames); i++ {
 		m[propertyNames[i]] = values[i]
 	}
 
-	if unflatten {
+	if unflatten != nil && *unflatten {
 		m = Unflatten(m)
 	}
 
