@@ -113,6 +113,10 @@ func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 }
 
 func formatSelection(properties []string) string {
+	if len(properties) == 0 {
+		return "*"
+	}
+
 	var b strings.Builder
 	for i, property := range properties {
 		b.Reset()
