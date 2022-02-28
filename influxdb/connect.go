@@ -2,6 +2,7 @@ package influxdb
 
 import (
 	"fmt"
+	"os"
 
 	influx "github.com/influxdata/influxdb1-client/v2"
 	"github.com/sirupsen/logrus"
@@ -10,12 +11,9 @@ import (
 var InfluxClient *influx.Client
 
 func InitializeInfluxClient() {
-	influxAddress := "10.20.1.24:30308"
-	influxUser := "root"
-	influxPassword := "jalapeno"
-	// influxAddress := os.Getenv("INFLUX_ADDRESS")
-	// influxUser := os.Getenv("INFLUX_USER")
-	// influxPassword := os.Getenv("INFLUX_PASSWORD")
+	influxAddress := os.Getenv("INFLUX_ADDRESS")
+	influxUser := os.Getenv("INFLUX_USER")
+	influxPassword := os.Getenv("INFLUX_PASSWORD")
 
 	logrus.WithFields(logrus.Fields{"influxAddress": influxAddress, "influxUser": influxUser}).Debug("Initializing Influx client.")
 
@@ -31,8 +29,7 @@ func InitializeInfluxClient() {
 }
 
 func queryInflux(queryString string) *influx.Response {
-	databaseName := "mdt_db"
-	// databaseName := os.Getenv("INFLUX_DB")
+	databaseName := os.Getenv("INFLUX_DB")
 
 	logger := logrus.WithFields(logrus.Fields{"databaseName": databaseName, "queryString": queryString})
 	logger.Debug("Querying InfluxDB.")
