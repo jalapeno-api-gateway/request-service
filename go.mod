@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/go-redis/redis/v8 v8.11.2
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
-	github.com/jalapeno-api-gateway/jagw-core v1.3.1
+	github.com/jalapeno-api-gateway/jagw-core v1.3.1-0.20220302090123-665181a09f99
 	github.com/jalapeno-api-gateway/protorepo-jagw-go v1.3.1
 	github.com/nqd/flat v0.1.1
 	github.com/sirupsen/logrus v1.8.1
