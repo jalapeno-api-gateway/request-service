@@ -113,6 +113,10 @@ func Fetch(logger *logrus.Entry, request *jagw.TelemetryRequest) []string {
 }
 
 func formatSelection(properties []string) string {
+	if len(properties) == 0 {
+		return "*"
+	}
+
 	var b strings.Builder
 	for i, property := range properties {
 		b.Reset()
@@ -141,10 +145,10 @@ func formatFilters(request *jagw.TelemetryRequest) string {
 	if request.RangeFilter == nil {
 		return b.String() + " limit 1"
 	} else {
-		if len(request.StringFilters) > 0 {
+		if b.Len() > 0 {
 			formatRangeFilter(" AND ", &b, request.RangeFilter)
 			} else {
-			formatRangeFilter(" ", &b, request.RangeFilter)
+			formatRangeFilter("WHERE ", &b, request.RangeFilter)
 
 		}
 		return b.String()
