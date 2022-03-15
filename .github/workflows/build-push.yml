@@ -2,14 +2,6 @@ name: build_and_push
 
 on:
   workflow_call:
-    inputs:
-      release_type:
-        description: "Type (dev | release)"
-        type: string
-        required: true
-      tag_name:
-        type: string
-        required: true
     secrets:
       dockerhub_username:
         required: true
@@ -32,20 +24,20 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
       - name: Build and push
-        if: inputs.release_type == 'dev'
+        if: github.event.inputs.release_or_dev == 'dev'
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: |
-            insost/jagw-request-service:${{ inputs.tag_name }}
-            ghcr.io/jalapeno-api-gateway/jagw-request-service:${{ inputs.tag_name }}
+            insost/jagw-request-service:${{ github.event.inputs.tag_name }}
+            ghcr.io/jalapeno-api-gateway/jagw-request-service:${{ github.event.inputs.tag_name }}
       - name: Build and push
-        if: inputs.release_type == 'release'
+        if: github.event.inputs.release_or_dev == 'release'
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: |
             insost/jagw-request-service:latest
-            insost/jagw-request-service:${{ inputs.tag_name }}
+            insost/jagw-request-service:${{ github.event.inputs.tag_name }}
             ghcr.io/jalapeno-api-gateway/jagw-request-service:latest
-            ghcr.io/jalapeno-api-gateway/jagw-request-service:${{ inputs.tag_name }}
+            ghcr.io/jalapeno-api-gateway/jagw-request-service:${{ github.event.inputs.tag_name }}
