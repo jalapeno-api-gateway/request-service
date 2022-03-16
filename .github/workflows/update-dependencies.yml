@@ -47,12 +47,8 @@ jobs:
         # In previous steps, branch (and PR) only gets created if there were changes, otherwise not
         id: branch-exists
         run: |
-          exists_locally=$(git rev-parse --verify --quiet gh-action-temp)
-          if [[ -z ${exists_locally} ]]; then
-              echo "::set-output name=exists::0"
-          else
-              echo "::set-output name=exists::1"
-          fi
+          # Returns 1 if it exists remotely and 0 if not
+          echo "::set-output name=exists::$(git ls-remote --heads git@github.com:jalapeno-api-gateway/request-service.git github-action-temp | wc -l)"
       - name: Delete temp branch if it exists
         if: steps.branch-exists.outputs.exists == 1
         uses: dawidd6/action-delete-branch@v3
