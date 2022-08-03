@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: request-service
+build:
+  artifacts:
+  - image: insost/jagw-request-service
+    docker:
+      dockerfile: Dockerfile.dev
+    sync:
+      # manual:
+      #   - src: '**/*.go'
+      #     dest: .
+      #   - src: '*/.go'
+      #     dest: 
+      infer: []
+
+deploy:
+  kubeContext: dev
+  kubectl:
+    defaultNamespace: jagw-dev-dominique
+    manifests:
+    - kubernetes/request-service-cm.yaml
+    - kubernetes/request-service-deploy.yaml
+    - kubernetes/request-service-np.yaml
+    - kubernetes/request-service-secret.yaml

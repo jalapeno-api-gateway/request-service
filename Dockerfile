@@ -11,7 +11,7 @@ COPY . .
 RUN CGO_ENABLED=0 go build -o ./out/request-service .
 
 FROM scratch
-LABEL maintainer="Julian Klaiber"
+LABEL maintainer="INS"
 
 COPY --from=build_base /tmp/request-service/out/request-service /usr/bin/request-service
 

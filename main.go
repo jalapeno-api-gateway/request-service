@@ -17,13 +17,16 @@ import (
 func main() {
 	logger.Init(logrus.StandardLogger(), os.Getenv("LOG_LEVEL")) // TODO: Pass this default log level through the environment variables through the helm chart
 
+	print("SCHEISSE")
+	print("MACHEN")
+
 	logrus.Trace("Starting Request Service.")
 
 	redis.InitializeRedisClient()
 	influxdb.InitializeInfluxClient()
 
 	serverAddress := os.Getenv("APP_SERVER_ADDRESS")
-	
+
 	logger := logrus.WithField("serverAddress", serverAddress)
 	logger.Trace("Listening for traffic.")
 	lis, err := net.Listen("tcp", serverAddress)
