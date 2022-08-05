@@ -1,18 +1,26 @@
-FROM golang:1.15-alpine AS build_base
+# no alpien due to special compilation flags
+FROM golang:1.18 AS build_base
 
-RUN apk add --no-cache git
-WORKDIR /tmp/request-service
+WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
 
-COPY . .
-RUN CGO_ENABLED=0 go build -o ./out/request-service .
+COPY . ./
 
-FROM scratch
-LABEL maintainer="INS"
+# Skaffold passes in debug-oriented compiler flags
+ARG SKAFFOLD_GO_GCFLAGS
+RUN go build -gcflags="${SKAFFOLD_GO_GCFLAGS}" -o /app/request-service .
 
-COPY --from=build_base /tmp/request-service/out/request-service /usr/bin/request-service
 
-ENTRYPOINT [ "/usr/bin/request-service" ]
+FROM gcr.io/distroless/base
+
+# Definition of this variable is used by 'skaffold debug' to identify a golang binary.
+# Default behavior - a failure prints a stack trace for the current goroutine.
+# See https://golang.org/pkg/runtime/
+ENV GOTRACEBACK=single
+
+WORKDIR /app
+COPY --from=build_base /app/request-service /app/request-service
+ENTRYPOINT ["/app/request-service"]
