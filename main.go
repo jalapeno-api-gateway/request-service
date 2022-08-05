@@ -17,8 +17,9 @@ import (
 func main() {
 	logger.Init(logrus.StandardLogger(), os.Getenv("LOG_LEVEL")) // TODO: Pass this default log level through the environment variables through the helm chart
 
-	print("SCHEISSE")
-	print("MACHEN")
+	print("Test")
+	println("CIAO")
+	println("GRèEZI")
 
 	logrus.Trace("Starting Request Service.")
 

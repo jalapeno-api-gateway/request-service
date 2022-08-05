@@ -6,17 +6,14 @@ build:
   artifacts:
   - image: insost/jagw-request-service
     docker:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile_non_compiled.dev
     sync:
-      # manual:
-      #   - src: '**/*.go'
-      #     dest: .
-      #   - src: '*/.go'
-      #     dest: 
-      infer: []
+      manual:
+        - src: '**/*.go'
+          dest: .
 
 deploy:
-  kubeContext: dev
+  #statusCheckDeadlineSeconds: 15 # max time to wait for deplyoment to become ready (maybe bug sometimes it takes 2 minutes)
   kubectl:
     defaultNamespace: jagw-dev-dominique
     manifests:

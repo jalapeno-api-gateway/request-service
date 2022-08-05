@@ -1,0 +1,28 @@
+# no alpine due to special compilation flags no available on alpine
+FROM golang:1.18 AS build
+
+WORKDIR /
+
+COPY . .
+
+ARG SKAFFOLD_GO_GCFLAGS='all=-N -l'
+ENV GOTRACEBACK=all
+
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+RUN CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest
+RUN CGO_ENABLED=0 go build -gcflags "${SKAFFOLD_GO_GCFLAGS}" -o ./app
+
+FROM alpine
+WORKDIR /
+COPY . .
+COPY --from=build /go/bin/dlv dlv
+COPY --from=build /app app
+
+ENTRYPOINT [ "/dlv" , "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app"]
+#ENTRYPOINT [ "/usr/bin/request-service" ]
+
+# CMD find . -type f -name "*.go" | entr -n -r  go run ./main.go
+# CMD go run ./main.go
