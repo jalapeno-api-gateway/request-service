@@ -12,14 +12,16 @@ var RedisClient *redis.Client
 func InitializeRedisClient() {
 	sentinelMaster := os.Getenv("SENTINEL_MASTER")
 	sentinelAddress := os.Getenv("SENTINEL_ADDRESS")
+	sentinelPassword := os.Getenv("SENTINEL_PASSWORD")
 	redisPassword := os.Getenv("REDIS_PASSWORD")
 
 	logrus.WithFields(logrus.Fields{"sentinelMaster": sentinelMaster, "sentinelAddress": sentinelAddress}).Debug("Initializing Redis client.")
 
 	RedisClient = redis.NewFailoverClient(&redis.FailoverOptions{
-		MasterName:    sentinelMaster,
-		SentinelAddrs: []string{sentinelAddress},
-		Password:      redisPassword,
-		DB:            0,
+		MasterName:       sentinelMaster,
+		SentinelAddrs:    []string{sentinelAddress},
+		Password:         redisPassword,
+		SentinelPassword: sentinelPassword,
+		DB:               0,
 	})
 }
