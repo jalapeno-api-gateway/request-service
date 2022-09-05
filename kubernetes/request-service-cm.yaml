@@ -5,7 +5,7 @@ kind: ConfigMap
 metadata:
   name: "request-service-config"
 data:
-    SENTINEL_ADDRESS: sentinel.jagw-dev-dominique.svc.cluster.local:5000 
+    SENTINEL_ADDRESS: jagw-redis.jagw-dev-dominique.svc.cluster.local:26379
     SENTINEL_MASTER: mymaster
     APP_SERVER_ADDRESS: 0.0.0.0:9000
     INFLUX_ADDRESS: influxdb.jalapeno.svc.cluster.local:8086

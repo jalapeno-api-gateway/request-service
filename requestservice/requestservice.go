@@ -32,7 +32,7 @@ func (s *requestServiceServer) GetLsNodes(ctx context.Context, request *jagw.Top
 		lsNode := convertLsNode(logger, document, request.Properties)
 		response.LsNodes = append(response.LsNodes, lsNode)
 	}
-	
+
 	logger.Debug("Sending response.")
 	return response, jagwerror.GetGrpcError(jagwError)
 }
@@ -46,9 +46,9 @@ func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request
 	for _, lsNodeKey := range request.LsNodeKeys {
 		documentKeys = append(documentKeys, fmt.Sprintf("%s_Coordinates", lsNodeKey))
 	}
-	
+
 	documents, jagwError := fetchDocuments(ctx, logger, documentKeys, class.LsNodeCoordinates)
-	
+
 	logger.Debug("Preparing response.")
 	response := &jagw.LsNodeCoordinatesResponse{}
 
@@ -56,7 +56,7 @@ func (s *requestServiceServer) GetLsNodeCoordinates(ctx context.Context, request
 		lsNode := convertLsNodeCoordinates(document)
 		response.Coordinates = append(response.Coordinates, lsNode)
 	}
-	
+
 	logger.Debug("Sending response.")
 	return response, jagwerror.GetGrpcError(jagwError)
 }
@@ -74,7 +74,7 @@ func (s *requestServiceServer) GetLsLinks(ctx context.Context, request *jagw.Top
 		lsLink := convertLsLink(document, request.Properties)
 		response.LsLinks = append(response.LsLinks, lsLink)
 	}
-	
+
 	logger.Debug("Sending response.")
 	return response, jagwerror.GetGrpcError(jagwError)
 }
@@ -92,7 +92,7 @@ func (s *requestServiceServer) GetLsPrefixes(ctx context.Context, request *jagw.
 		lsPrefix := convertLsPrefix(document, request.Properties)
 		response.LsPrefixes = append(response.LsPrefixes, lsPrefix)
 	}
-	
+
 	logger.Debug("Sending response.")
 	return response, jagwerror.GetGrpcError(jagwError)
 }
@@ -110,7 +110,7 @@ func (s *requestServiceServer) GetLsSrv6Sids(ctx context.Context, request *jagw.
 		lsSRv6SID := convertLsSrv6Sid(document, request.Properties)
 		response.LsSrv6Sids = append(response.LsSrv6Sids, lsSRv6SID)
 	}
-	
+
 	logger.Debug("Sending response.")
 	return response, jagwerror.GetGrpcError(jagwError)
 }
@@ -136,7 +136,7 @@ func (s *requestServiceServer) GetLsNodeEdges(ctx context.Context, request *jagw
 func (s *requestServiceServer) GetTelemetryData(ctx context.Context, request *jagw.TelemetryRequest) (*jagw.TelemetryResponse, error) {
 	logger := logrus.WithFields(logrus.Fields{"clientIp": getClientIp(ctx), "grpcFunction": "GetTelemetryData"})
 	logger.Debug("Incoming request.")
-	
+
 	telemetryData := fetchTelemetryData(logger, request)
 	response := &jagw.TelemetryResponse{TelemetryData: telemetryData}
 
@@ -165,4 +165,4 @@ func (s *requestServiceServer) GetMeasurementDetails(ctx context.Context, reques
 
 	logger.Debug("Sending response.")
 	return &jagw.MeasurementDetailsResponse{TimestampLatestMeasurement: &latestTimestamp, Columns: columns}, nil
-} 
+}

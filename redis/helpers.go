@@ -50,7 +50,7 @@ func getValuesByKeys(ctx context.Context, logger *logrus.Entry, keys []string) (
 			keysNotFound = append(keysNotFound, keys[i])
 		}
 	}
-	
+
 	return bytes, createErrorForKeysNotFound(keysNotFound)
 }
 
@@ -66,31 +66,32 @@ func createErrorForKeysNotFound(keysNotFound []string) *jagwerror.Error {
 
 func unmarshalObject(logger *logrus.Entry, bytes []byte, className class.Class) interface{} {
 	switch className {
-		case class.LsNode:
-			document := topology.LsNode{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		case class.LsNodeCoordinates:
-			document := topology.LsNodeCoordinates{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		case class.LsLink:
-			document := topology.LsLink{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		case class.LsPrefix:
-			document := topology.LsPrefix{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		case class.LsSrv6Sid:
-			document := topology.LsSrv6Sid{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		case class.LsNodeEdge:
-			document := topology.LsNodeEdge{}
-			handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
-			return document
-		default: return nil
+	case class.LsNode:
+		document := topology.LsNode{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	case class.LsNodeCoordinates:
+		document := topology.LsNodeCoordinates{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	case class.LsLink:
+		document := topology.LsLink{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	case class.LsPrefix:
+		document := topology.LsPrefix{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	case class.LsSrv6Sid:
+		document := topology.LsSrv6Sid{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	case class.LsNodeEdge:
+		document := topology.LsNodeEdge{}
+		handleUnmarshallingError(logger, json.Unmarshal(bytes, &document))
+		return document
+	default:
+		return nil
 	}
 }
 

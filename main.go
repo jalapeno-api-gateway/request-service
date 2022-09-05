@@ -15,10 +15,7 @@ import (
 )
 
 func main() {
-	logger.Init(logrus.StandardLogger(), os.Getenv("LOG_LEVEL")) // TODO: Pass this default log level through the environment variables through the helm chart
-
-	// time.Sleep(3 * time.Minute)
-	logrus.Trace("Starting Request Service.")
+	logger.Init(logrus.StandardLogger(), os.Getenv("LOG_LEVEL")) // TODO: Pass this default log level through the environment variables through the helm chart	logrus.Trace("Starting Request Service.")
 
 	redis.InitializeRedisClient()
 	influxdb.InitializeInfluxClient()
