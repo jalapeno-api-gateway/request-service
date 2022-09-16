@@ -20,7 +20,7 @@ deploy:
     manifests:
     - kubernetes/request-service-cm.yaml
     - kubernetes/request-service-deploy.yaml
-    - kubernetes/request-service-np.yaml
+    - kubernetes/request-service-svc.yaml
     - kubernetes/request-service-secret.yaml
 
 profiles:
